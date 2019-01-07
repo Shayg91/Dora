@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="7b113aab-575a-4080-a067-eac935a7ce0f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-material-ui" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -15,7 +14,24 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/server.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="18" selection-start-column="18" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -24,13 +40,14 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/react-material-ui/src/App.js" />
+        <option value="$PROJECT_DIR$/server.js" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
-    <option name="width" value="697" />
-    <option name="height" value="371" />
+    <option name="x" value="-8" />
+    <option name="width" value="698" />
+    <option name="height" value="372" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -43,8 +60,8 @@
         <subPane>
           <expand>
             <path>
-              <item name="dora" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dora" type="462c0819:PsiDirectoryNode" />
+              <item name="Dora" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Dora" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -57,7 +74,7 @@
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="settings.github" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -88,6 +105,7 @@
       <updated>1546884564186</updated>
       <workItem from="1546884565670" duration="4009000" />
       <workItem from="1546889182017" duration="53000" />
+      <workItem from="1546889694807" duration="574000" />
     </task>
     <task id="LOCAL-00001" summary="grf">
       <created>1546886454955</created>
@@ -96,16 +114,23 @@
       <option name="project" value="LOCAL" />
       <updated>1546886454955</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added Server file">
+      <created>1546889777878</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1546889777878</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4062000" />
+    <option name="totallyTimeSpent" value="4636000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24983476" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -117,9 +142,9 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.40104166" side_tool="true" visible="true" weight="0.25204584" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.5989583" visible="true" weight="0.25204584" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="8" sideWeight="0.49966952" visible="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50033045" side_tool="true" visible="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.59814936" weight="0.25070822" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -133,10 +158,18 @@
       <path value="$PROJECT_DIR$/react-material-ui" />
     </ignored-roots>
     <MESSAGE value="grf" />
-    <option name="LAST_COMMIT_MESSAGE" value="grf" />
+    <MESSAGE value="Added Server file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Server file" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/react-material-ui/src/index.js" />
     <entry file="file://$PROJECT_DIR$/react-material-ui/src/App.js" />
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="18" selection-start-column="18" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
