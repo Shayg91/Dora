@@ -34,3 +34,4 @@ packages/
 node_modules/
 #Webstorm Env
 .idea/
+/.idea/workspace.xml
