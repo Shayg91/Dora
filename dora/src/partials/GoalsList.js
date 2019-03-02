@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/List'
+import ListItemText from '@material-ui/core/List'
+import ListItemSecondaryAction from '@material-ui/core/List'
+import IconButton from '@material-ui/core/List'
+import DeleteIcon from '@material-ui/icon/Delete'
 
 class GoalsList extends Component{
     constructor(props) {
@@ -6,15 +12,21 @@ class GoalsList extends Component{
     }
 
     render(){
-        const goals = this.props.goals;
-        const listItems = goals.map((goal) =>
-            <li key={goal.toString()}>
-                {goal}
-            </li>
-        );
-        return (
-            <ul>{listItems}</ul>
-        );
+        return(
+            <div className={this.props.classes.demo}>
+                <List>
+                    {generate(
+                        <ListItem>
+                        <ListItemText primary="Single-line item" />
+                        <ListItemSecondaryAction>
+                            <IconButton aria-label="Delete">
+                            <DeleteIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                        </ListItem>,
+                    )}
+                </List>
+            </div>)
     }
 }
 

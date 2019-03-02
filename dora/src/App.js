@@ -1,16 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Lesson from './Lesson';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import MainAppBar from './MainAppBar'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#33c9dc',
+      main: '#00bcd4',
+      dark: '#008394',
+      contrastText: '#000',
+    },
+    secondary: {
+      light: '#ffbb33',
+      main: '#ffab00',
+      dark: '#b27700',
+      contrastText: '#000',
+    },
+  }
+});
 
 class App extends Component {
   render() {
     return (
+      <MuiThemeProvider theme={theme}>
       <div className="App">
-        <header className="App-header">
-          <Lesson />
-        </header>
+        <MainAppBar/>
       </div>
+    </MuiThemeProvider>
     );
   }
 }
