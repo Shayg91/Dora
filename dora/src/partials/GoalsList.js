@@ -13,7 +13,7 @@ class GoalsList extends Component{
 
     render(){
         return(
-            <div className={this.props.classes.demo}>
+            <div>
                 <List>
                     {generate(
                         <ListItem>

@@ -5,6 +5,8 @@ import Modal from '@material-ui/core/Modal';
 import Fab from '@material-ui/core/Fab'; 
 import AddIcon from '@material-ui/icons/Add'
 import Button from '@material-ui/core/Button'
+import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
 import './NewScenario.css'
 
 class NewScenario extends Component{
@@ -30,9 +32,10 @@ class NewScenario extends Component{
     render(){
         return(
         <div>
-            <Fab color="secondary" aria-label="Edit" className={this.classes.fab} onClick={this.handleOpen}>
-                <AddIcon/>
-            </Fab>
+            <Grid item>
+                <Paper onClick={this.handleOpen}><AddIcon/></Paper>
+            </Grid>
+            
             <Modal open={this.state.open} onClose={this.handleClose} className='modal'>
                 <div className='modal-main'>
                     <Typography variant="h6" id="modal-title">
@@ -49,3 +52,9 @@ class NewScenario extends Component{
 }
 
 export default NewScenario;
+
+/*
+<Fab color="secondary" aria-label="Edit" className={this.classes.fab} onClick={this.handleOpen} style="">
+                <AddIcon/>
+            </Fab>
+*/

@@ -13,8 +13,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ClassIcon from '@material-ui/icons/Class';
 
-import Lesson from './Lesson';
-import Scenario from './Scenario'
+import Lessons from './Lesson';
+import Scenarios from './Scenarios'
+import Actions from './Actions'
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -68,16 +69,17 @@ function MainAppBar(props) {
             <ListItemIcon><ClassIcon /></ListItemIcon>
             <ListItemText primary='Scenarios' />
           </ListItem></NavLink>
-          <ListItem button key='Other'>
+          <NavLink to='/Actions'><ListItem button key='Actions'>
             <ListItemIcon><ClassIcon /></ListItemIcon>
-            <ListItemText primary='Other' />
-          </ListItem>
+            <ListItemText primary='Actions' />
+          </ListItem></NavLink>
         </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Route path="/Lessons" component={Lesson}/>
-        <Route path="/Scenarios" component={Scenario}/>
+        <Route path="/Lessons" component={Lessons}/>
+        <Route path="/Scenarios" component={Scenarios}/>
+        <Route path="/Actions" component={Actions}/>
       </main>
     </div>
     </HashRouter>
