@@ -1,0 +1,17 @@
+.paper {
+    padding: 10px;
+    margin: 10px;
+    max-width: 500;
+}
+
+.image {
+    width: 128;
+    height: 128;
+}
+  
+.img {
+    margin: 'auto';
+    display: 'block';
+    max-width: '100%';
+    max-height: '100%';
+}

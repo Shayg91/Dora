@@ -1,32 +1,47 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
-import { TextField, Button } from '../../node_modules/@material-ui/core';
+import { Typography, ButtonBase } from '../../node_modules/@material-ui/core';
+
+import './Action.css'
 
 class Action extends Component{
     constructor(props) {
         super(props);
-
-        console.log(this.props);
     }
 
     render() {
       return (
-        <ul>
-          {this.props.items.map(item => (
-            <li key={item._id}>{item.textOrWAV}</li>
+        <div>
+          {this.props.data.map(doc => (
+            <Paper key={doc.id} className='paper'>
+            <Grid container spacing={16}>
+              <Grid item>
+                <ButtonBase className='image'>
+                  <img className='img' alt="complex" src={doc.data().affectPath} />
+                </ButtonBase>
+              </Grid>
+              <Grid item xs={6} sm container>
+                <Grid item xs container direction="column" spacing={16}>
+                  <Grid item xs>
+                    <Typography gutterBottom variant="subtitle1">
+                      {doc.data().textOrWAV}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography style={{ cursor: 'pointer' }}>Remove</Typography>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle1">{doc.data().level}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Paper>
           ))}
-        </ul>
+        </div>
       );
     }
 }
 
 export default Action;
-
-/*{this.props.data.map(function(action){
-            return  (<Grid item xs={12}>
-                        <Paper>
-                            <TextField>Testing</TextField>
-                        </Paper>
-                     </Grid>)})
-            }*/
