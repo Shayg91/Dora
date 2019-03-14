@@ -3,9 +3,9 @@ import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import { Typography, ButtonBase } from '../../node_modules/@material-ui/core';
 
-import './Scenario.css'
+import './Lesson.css'
 
-class Scenario extends Component{
+class Lesson extends Component{
     constructor(props) {
         super(props);
     }
@@ -25,7 +25,7 @@ class Scenario extends Component{
                                 <Grid item xs container direction="column" spacing={16}>
                                     <Grid item xs>
                                         <Typography gutterBottom variant="subtitle1">
-                                            {doc.data().action}
+                                            {doc.data().textOrWAV}
                                         </Typography>
                                     </Grid>
                                     <Grid item>
@@ -44,4 +44,4 @@ class Scenario extends Component{
     }
 }
 
-export default Scenario;
+export default Lesson;

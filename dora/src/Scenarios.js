@@ -80,7 +80,8 @@ class Scenarios extends Component{
                         <Paper className='paper'>
                             <Grid container direction="column" justify="center" alignItems="flex-start" spacing={16}>
                                 <form >
-                                    <TextField id="Action" label="Select action:" select value={this.state.data.action}
+                                    <label>Select action:</label><br/>
+                                    <TextField id="Action" select value={this.state.data.action}
                                                onChange={this.handleFieldChange('action')} margin="normal">
                                         <MenuItem key='1' value='1'>
                                             Action 1
@@ -105,10 +106,10 @@ class Scenarios extends Component{
                                             Level 3
                                         </MenuItem>
                                     </TextField>
-                                    <Button variant="contained" color='secondary' onClick={this.handleSubmit}>
-                                        Save
-                                    </Button>
                                 </form>
+                                <Button variant="contained" color='secondary' onClick={this.handleSubmit}>
+                                    Save
+                                </Button>
                             </Grid>
                         </Paper>
                         : null
