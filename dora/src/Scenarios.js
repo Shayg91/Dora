@@ -28,10 +28,10 @@ class Scenarios extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
 
-        this.getAlScenarios();
+        this.getAllScenarios();
     }
 
-    getAlScenarios(){
+    getAllScenarios(){
 
         let currentComponent = this;
 
@@ -52,24 +52,31 @@ class Scenarios extends Component{
     }
 
     handleSubmit(event) {
+        this.state.ref.add(this.state.data);
         this.setState(state => ({
-            added: !state.added
+            added: !state.added,
+            add_new: !state.add_new,
+            data: {
+                level: 1,
+                action: 1,
+                affectPath: ""
+            }
         }));
         event.preventDefault();
     }
 
-    handleFieldChange = (field) => (event) => {
+    handleFieldChange = field => event => {
         let data = { ...this.state.data };
         data[field] = event.target.value;
         this.setState({ data });
-    }
+    };
 
     handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
             return;
         }
         this.setState({ added: false });
-    }
+    };
 
     render(){
         return(
@@ -114,8 +121,13 @@ class Scenarios extends Component{
                         </Paper>
                         : null
                     }
-                    <Button variant="contained" className='add-new-btn' onClick={this.handleToggleClick}>
-                        {this.state.add_new ? 'Add New Scenario' : 'Close' }
+                    <Button
+                        variant="contained"
+                        className="add-new-btn"
+                        color="secondary"
+                        onClick={this.handleToggleClick}
+                    >
+                        {this.state.add_new ? "Add New Scenario" : "Close"}
                     </Button>
                     <Scenario data={this.state.scenarios}/>
                 </Grid>

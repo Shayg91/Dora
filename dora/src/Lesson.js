@@ -18,8 +18,11 @@ class Lessons extends Component{
             add_new: true,
             added: false,
             data: {
-                level: 1,
-                action : 1,
+                title: '',
+                category : '',
+                badge: '',
+                goals: '',
+                scenarios: 1,
                 affectPath: '',
             }
         }
@@ -52,32 +55,39 @@ class Lessons extends Component{
     }
 
     handleSubmit(event) {
+        this.state.ref.add(this.state.data);
         this.setState(state => ({
-            added: !state.added
-        }));
+            added: !state.added,
+            add_new: !state.add_new,
+            data: {
+                title: '',
+                category: '',
+                badge: '',
+                goals: '',
+                scenarios: 1,
+                affectPath: '',
+            }}));
         event.preventDefault();
     }
 
-    handleSubmitGoal(event) {
-        this.setState(state => ({
-            added: !state.added
-        }));
-        event.preventDefault();
-        //need to add when pressing add a new goal field
+    handleSubmitGoal = () => {
+            this.setState({
+                goals: this.state.goals.concat('goals')
+            });
     }
 
-    handleFieldChange = (field) => (event) => {
+    handleFieldChange = field => event => {
         let data = { ...this.state.data };
         data[field] = event.target.value;
         this.setState({ data });
-    }
+    };
 
     handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
             return;
         }
         this.setState({ added: false });
-    }
+    };
 
     render(){
         return(
@@ -88,15 +98,41 @@ class Lessons extends Component{
                         <Paper className='paper'>
                             <Grid container direction="column" justify="center" alignItems="flex-start" spacing={16}>
                                 <form >
-                                    <label>Insert lesson title: </label> <input type="text"/><br/>
-                                    <label>Insert lesson category: </label> <input type="text"/><br/>
-                                    <label>Insert lesson goal: </label> <input type="text"/>
-                                    <Button onClick={this.handleSubmitGoal}>
+                                    <TextField
+                                        id="title"
+                                        label="Insert lesson title"
+                                        fullWidth
+                                        value={this.state.data.title}
+                                        onChange={this.handleFieldChange("title")}
+                                        margin="normal"
+                                    /><br/>
+                                    <TextField
+                                        id="category"
+                                        label="Insert lesson category"
+                                        fullWidth
+                                        value={this.state.data.category}
+                                        onChange={this.handleFieldChange("category")}
+                                        margin="normal"
+                                    /><br/>
+                                    <TextField
+                                        id="goals"
+                                        label="Insert lesson goals"
+                                        fullWidth
+                                        value={this.state.data.goals}
+                                        onChange={this.handleFieldChange("goals")}
+                                        margin="normal"
+                                    />
+                                    <Button color='secondary' variant="contained" onClick={this.handleSubmitGoal}>
                                         Add Goal
                                     </Button><br/>
-                                    <label>Insert lesson badge: </label> <input type="file"/><br/>
-                                    <TextField id="level" label="Scenarios:" select value={this.state.data.level}
-                                               onChange={this.handleFieldChange('level')} margin="normal">
+                                    <br/><label>Insert lesson badge: </label> <input type="file"/><br/>
+                                    <TextField
+                                        id="scenario"
+                                        label="Scenarios"
+                                        select
+                                        value={this.state.data.scenarios}
+                                        onChange={this.handleFieldChange("scenarios")}
+                                        margin="normal">
                                         <MenuItem key='1' value='1'>
                                             Scenario 1
                                         </MenuItem>
@@ -115,8 +151,13 @@ class Lessons extends Component{
                         </Paper>
                         : null
                     }
-                    <Button variant="contained" className='add-new-btn' onClick={this.handleToggleClick}>
-                        {this.state.add_new ? 'Add New Lesson' : 'Close' }
+                    <Button
+                        variant="contained"
+                        className="add-new-btn"
+                        color="secondary"
+                        onClick={this.handleToggleClick}
+                    >
+                        {this.state.add_new ? "Add New Lesson" : "Close"}
                     </Button>
                     <Lesson data={this.state.lessons}/>
                 </Grid>

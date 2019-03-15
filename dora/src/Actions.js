@@ -148,7 +148,7 @@ class Actions extends Component {
             color="secondary"
             onClick={this.handleToggleClick}
           >
-            {this.state.add_new ? "Add New Scenario" : "Close"}
+            {this.state.add_new ? "Add New Action" : "Close"}
           </Button>
           <Action data={this.state.actions} />
         </Grid>
@@ -161,7 +161,7 @@ class Actions extends Component {
           color="secondary"
           autoHideDuration={6000}
           onClose={this.handleClose}
-          message={<span id="message-id">Action Added Succsessfully!</span>}
+          message={<span id="message-id">Action Added Successfully!</span>}
           action={[
             <IconButton
               key="close"
