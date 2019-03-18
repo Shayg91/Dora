@@ -30,7 +30,6 @@ class Lessons extends Component{
         this.handleToggleClick = this.handleToggleClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
-
         this.getAllLessons();
     }
 
@@ -125,7 +124,8 @@ class Lessons extends Component{
                                     <Button color='secondary' variant="contained" onClick={this.handleSubmitGoal}>
                                         Add Goal
                                     </Button><br/>
-                                    <br/><label>Insert lesson badge: </label> <input type="file"/><br/>
+                                    <br/><label>Insert lesson badge: </label> <input type="file" accept={"image/jpeg",
+                                    "image/png", "video/mp4"}/><br/>
                                     <TextField
                                         id="scenario"
                                         label="Scenarios"
