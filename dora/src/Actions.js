@@ -12,8 +12,7 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 
 import "./Actions.css";
-
-import Action from "./partials/Action";
+import Action from "./partials/Action"
 
 class Actions extends Component {
   constructor(props) {
