@@ -10,9 +10,10 @@ import {
   IconButton
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import StarIcon from "@material-ui/icons/Star";
 
 import "./Actions.css";
-import Action from "./partials/Action"
+import Action from "./partials/Action";
 
 class Actions extends Component {
   constructor(props) {
@@ -121,13 +122,16 @@ class Actions extends Component {
                     margin="normal"
                   >
                     <MenuItem key="1" value="1">
-                      Level 1
+                      <StarIcon />
                     </MenuItem>
                     <MenuItem key="2" value="2">
-                      Level 2
+                      <StarIcon />
+                      <StarIcon />
                     </MenuItem>
                     <MenuItem key="3" value="3">
-                      Level 3
+                      <StarIcon />
+                      <StarIcon />
+                      <StarIcon />
                     </MenuItem>
                   </TextField>
                   <Button
