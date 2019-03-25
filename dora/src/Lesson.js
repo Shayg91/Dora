@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { Component } from "react";
 import firebase from './scripts/Dora';
-import Grid from '@material-ui/core/Grid'
-import { TextField, Button, Paper, Snackbar, IconButton } from '@material-ui/core';
+import { TextField, Button, Paper, Snackbar, IconButton, InputLabel, Chip, Grid} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close'
 import './Lesson.css'
 import Lesson from './partials/Lesson';
-import Scenarios from "./Scenarios";
-import Scenario from "./partials/Scenario";
 
-class Lessons extends Scenarios{
+
+class Lessons extends Component{
     constructor(props) {
         super(props);
 
         this.state = {
             lessons: [],
-            ref: firebase.firestore().collection('lesson'),
+            scenarios: [],
+            ref_main: firebase.firestore().collection('lesson'),
+            ref_secondary: firebase.firestore().collection('scenario'),
             add_new: true,
             added: false,
             data: {
@@ -22,7 +22,7 @@ class Lessons extends Scenarios{
                 category: '',
                 badge: '',
                 goals: '',
-                scenarios: 1,
+                scenarios: '',
                 affectPath: '',
             }
         }
@@ -32,14 +32,27 @@ class Lessons extends Scenarios{
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleSubmitGoal = this.handleSubmitGoal.bind(this);
         this.getAllLessons();
+        this.getAllScenarios();
     }
+
 
     getAllLessons(){
         let currentComponent = this;
-        this.state.ref.get().then(function(querySnapshot) {
+        this.state.ref_main.get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 currentComponent.setState(state => ({
                     lessons: [...state.lessons, doc],
+                }));
+            });
+        });
+    }
+
+    getAllScenarios() {
+        let currentComponent = this;
+        this.state.ref_secondary.get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                currentComponent.setState(state => ({
+                    scenarios: [...state.scenarios, doc]
                 }));
             });
         });
@@ -52,7 +65,7 @@ class Lessons extends Scenarios{
     }
 
     handleSubmit(event) {
-        this.state.ref.add(this.state.data);
+        this.state.ref_main.add(this.state.data);
         this.setState(state => ({
             added: !state.added,
             add_new: !state.add_new,
@@ -68,9 +81,9 @@ class Lessons extends Scenarios{
     }
 
     handleSubmitGoal = () => {
-            this.setState({
-                goals: this.state.goals.concat('goals')
-            });
+        this.setState({
+            goals: this.state.goals.concat('goals')
+        });
     }
 
     handleFieldChange = field => event => {
@@ -124,7 +137,10 @@ class Lessons extends Scenarios{
                                     </Button><br/>
                                     <br/><label>Insert lesson badge: </label> <input type="file" accept={"image/jpeg",
                                     "image/png", "video/mp4"}/><br/>
-                                    <Scenarios/>
+                                    <InputLabel>Select scenarios</InputLabel>
+                                    {this.state.scenarios.map(doc=>{
+                                        return<Chip key={doc.id} label={doc.data().title}/>;
+                                    })}
                                 </form>
                                 <Button variant="contained" color='secondary' onClick={this.handleSubmit}>
                                     Save
@@ -168,5 +184,6 @@ class Lessons extends Scenarios{
         );
     }
 }
+
 
 export default Lessons;

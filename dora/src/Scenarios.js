@@ -11,6 +11,7 @@ import {
   Chip
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import StarIcon from "@material-ui/icons/Star";
 import "./Scenarios.css";
 
 import Scenario from "./partials/Scenario";
@@ -70,7 +71,7 @@ class Scenarios extends Component {
   }
 
   handleSubmit(event) {
-    this.state.ref.add(this.state.data);
+    this.state.ref_main.add(this.state.data);
     this.setState(state => ({
       added: !state.added,
       add_new: !state.add_new,
@@ -84,11 +85,11 @@ class Scenarios extends Component {
     event.preventDefault();
   }
 
-  handleFieldChange = field => event => {
-    let data = { ...this.state.data };
-    data[field] = event.target.value;
-    this.setState({ data });
-  };
+    handleFieldChange = field => event => {
+        let data = { ...this.state.data };
+        data[field] = event.target.value;
+        this.setState({ data });
+    };
 
   handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -125,34 +126,29 @@ class Scenarios extends Component {
                     onChange={this.handleFieldChange("title")}
                     margin="normal"
                   />
-                  <label>Select action:</label>
                   <br />
                   <TextField
-                    id="Action"
-                    select
-                    value="Select Action"
-                    onChange={this.handleFieldChange("action")}
-                    margin="normal"
-                  />
-                  <br />
-                  <TextField
-                    id="level"
-                    label="Level"
-                    select
-                    value={this.state.data.level}
-                    onChange={this.handleFieldChange("level")}
-                    margin="normal"
+                      id="level"
+                      label="Level"
+                      select
+                      value={this.state.data.level}
+                      onChange={this.handleFieldChange("level")}
+                      margin="normal"
                   >
                     <MenuItem key="1" value="1">
-                      Level 1
+                      <StarIcon />
                     </MenuItem>
                     <MenuItem key="2" value="2">
-                      Level 2
+                      <StarIcon />
+                      <StarIcon />
                     </MenuItem>
                     <MenuItem key="3" value="3">
-                      Level 3
+                      <StarIcon />
+                      <StarIcon />
+                      <StarIcon />
                     </MenuItem>
                   </TextField>
+                  <label>Select action:</label>
                   {this.state.actions.map(doc => {
                     return <Chip key={doc.id} label={doc.data().textOrWAV} />;
                   })}

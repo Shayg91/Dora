@@ -42,7 +42,6 @@ class Actions extends Component {
 
   getAllActions() {
     let currentComponent = this;
-
     this.state.ref.get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
         currentComponent.setState(state => ({
