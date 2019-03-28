@@ -7,10 +7,13 @@ import {
   MenuItem,
   Paper,
   Snackbar,
-  IconButton
+  IconButton,
+  Tooltip
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import AddIcon from "@material-ui/icons/Add";
 import StarIcon from "@material-ui/icons/Star";
+import ThreeSixtyIcon from "@material-ui/icons/ThreeSixty";
 
 import "./Actions.css";
 import Action from "./partials/Action";
@@ -24,6 +27,7 @@ class Actions extends Component {
       ref: firebase.firestore().collection("action"),
       add_new: true,
       added: false,
+      questionInput: true,
       data: {
         level: 1,
         textOrWAV: "",
@@ -34,6 +38,8 @@ class Actions extends Component {
     this.handleToggleClick = this.handleToggleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.changeQuestionInput = this.changeQuestionInput.bind(this);
+    this.addPicture = this.addPicture.bind(this);
   }
 
   componentDidMount() {
@@ -85,6 +91,14 @@ class Actions extends Component {
     this.setState({ added: false });
   };
 
+  changeQuestionInput() {
+    this.setState(state => ({
+      questionInput: !state.questionInput
+    }));
+  }
+
+  addPicture() {}
+
   render() {
     return (
       <div className="main">
@@ -99,48 +113,101 @@ class Actions extends Component {
             <Paper className="paper">
               <Grid
                 container
-                direction="column"
-                justify="center"
-                alignItems="flex-start"
+                direction="row"
+                justify="flext-start"
+                alignItems="center"
                 spacing={16}
               >
-                <form>
-                  <TextField
-                    id="question"
-                    label="Question"
-                    fullWidth
-                    value={this.state.data.textOrWAV}
-                    onChange={this.handleFieldChange("textOrWAV")}
-                    margin="normal"
-                  />
-                  <TextField
-                    id="level"
-                    label="Level"
-                    select
-                    value={this.state.data.level}
-                    onChange={this.handleFieldChange("level")}
-                    margin="normal"
+                <form className="new-action-modal">
+                  <Grid
+                    direction="row"
+                    container
+                    justify="flext-start"
+                    alignItems="flex-end"
+                    spacing={16}
                   >
-                    <MenuItem key="1" value="1">
-                      <StarIcon />
-                    </MenuItem>
-                    <MenuItem key="2" value="2">
-                      <StarIcon />
-                      <StarIcon />
-                    </MenuItem>
-                    <MenuItem key="3" value="3">
-                      <StarIcon />
-                      <StarIcon />
-                      <StarIcon />
-                    </MenuItem>
-                  </TextField>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={this.handleSubmit}
+                    {this.state.questionInput ? (
+                      <TextField
+                        id="question"
+                        className="question"
+                        multiline
+                        label="Question"
+                        value={this.state.data.textOrWAV}
+                        onChange={this.handleFieldChange("textOrWAV")}
+                        margin="normal"
+                      />
+                    ) : (
+                      <TextField
+                        id="question"
+                        className="question"
+                        multiline
+                        label="Other"
+                        value={this.state.data.textOrWAV}
+                        onChange={this.handleFieldChange("textOrWAV")}
+                        margin="normal"
+                      />
+                    )}
+                    {this.state.questionInput ? (
+                      <div>
+                        <input
+                          accept="image/*"
+                          style={{ display: "none" }}
+                          id="raised-button-file"
+                          type="file"
+                          onChange={this.handleFieldChange("affectPath")}
+                        />
+                        <label htmlFor="raised-button-file">
+                          <Tooltip title="Add Picture" placement="top">
+                            <Button component="span">
+                              <AddIcon color="secondary" />
+                            </Button>
+                          </Tooltip>
+                        </label>
+                      </div>
+                    ) : null}
+
+                    <Tooltip title="Change Input Type" placement="top">
+                      <Button onClick={this.changeQuestionInput}>
+                        <ThreeSixtyIcon color="secondary" />
+                      </Button>
+                    </Tooltip>
+                  </Grid>
+                  <Grid
+                    direction="row"
+                    container
+                    justify="flext-start"
+                    alignItems="center"
+                    spacing={16}
                   >
-                    Save
-                  </Button>
+                    <TextField
+                      id="level"
+                      label="Level"
+                      select
+                      value={this.state.data.level}
+                      onChange={this.handleFieldChange("level")}
+                      margin="normal"
+                    >
+                      <MenuItem key="1" value="1">
+                        <StarIcon color="secondary" />
+                      </MenuItem>
+                      <MenuItem key="2" value="2">
+                        <StarIcon color="secondary" />
+                        <StarIcon color="secondary" />
+                      </MenuItem>
+                      <MenuItem key="3" value="3">
+                        <StarIcon color="secondary" />
+                        <StarIcon color="secondary" />
+                        <StarIcon color="secondary" />
+                      </MenuItem>
+                    </TextField>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={this.handleSubmit}
+                    >
+                      Save
+                    </Button>
+                  </Grid>
                 </form>
               </Grid>
             </Paper>
