@@ -22,9 +22,12 @@ class Scenario extends Component{
                                 </ButtonBase>
                             </Grid>
                             <Grid item xs={6} sm container>
-                                <Grid item xs container direction="column" spacing={16}>
+\                                <Grid item xs container direction="column" spacing={16}>
                                     <Grid item xs>
                                         <Typography gutterBottom variant="subtitle1">
+                                            {doc.data().title}
+                                        </Typography>
+                                        <Typography gutterBottom variant="subtitle2">
                                             {doc.data().action}
                                         </Typography>
                                     </Grid>
