@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 
-import "./Lesson.css";
+import "./Lessons.css";
 import Lesson from "./partials/Lesson";
 
 class Lessons extends Component {
