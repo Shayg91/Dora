@@ -1,14 +1,18 @@
 import React, { Component } from "react";
 import firebase from "./scripts/Dora";
-import Grid from "@material-ui/core/Grid";
 import {
-  TextField,
-  Button,
-  MenuItem,
-  Paper,
-  Snackbar,
-  IconButton,
-  Chip
+    TextField,
+    Button,
+    Paper,
+    Snackbar,
+    IconButton,
+    InputLabel,
+    Chip,
+    Grid,
+    FormControl,
+    Select,
+    Input,
+    MenuItem
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import StarIcon from "@material-ui/icons/Star";
@@ -30,7 +34,7 @@ class Scenarios extends Component {
       data: {
         title: "",
         level: 1,
-        actions: "",
+        actions: [],
         affectPath: ""
       }
     };
@@ -85,11 +89,17 @@ class Scenarios extends Component {
     event.preventDefault();
   }
 
-    handleFieldChange = field => event => {
-        let data = { ...this.state.data };
-        data[field] = event.target.value;
-        this.setState({ data });
-    };
+  handleFieldChange = field => event => {
+      let data = { ...this.state.data };
+      data[field] = event.target.value;
+      this.setState({ data });
+  };
+
+  handleChange = event => {
+      this.setState({
+          data: { ...this.state.data, actions: event.target.value }
+        });
+  };
 
   handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -98,7 +108,21 @@ class Scenarios extends Component {
     this.setState({ added: false });
   };
 
-  render() {
+  handleChangeMultiple = event => {
+      const { options } = event.target;
+      const value = [];
+      for (let i = 0, l = options.length; i < l; i += 1) {
+          if (options[i].selected) {
+              value.push(options[i].value);
+          }
+      }
+      this.setState({
+          data: { ...this.state.data, scenarios: value }
+      });
+  };
+
+
+    render() {
     return (
       <div className="main">
         <h3>Scenarios</h3>
@@ -148,10 +172,30 @@ class Scenarios extends Component {
                       <StarIcon />
                     </MenuItem>
                   </TextField>
-                  <label>Select action:</label>
-                  {this.state.actions.map(doc => {
-                    return <Chip key={doc.id} label={doc.data().textOrWAV} />;
-                  })}
+                <FormControl fullWidth>
+                    <InputLabel htmlFor="select-multiple-chip">
+                        Select actions for this scenario:
+                    </InputLabel>
+                    <Select
+                        multiple
+                        value={this.state.data.actions}
+                        onChange={this.handleChange}
+                        input={<Input id="select-multiple-chip" />}
+                        renderValue={selected => (
+                            <div>
+                                {selected.map(value => (
+                                    <Chip key={value} label={value} />
+                                ))}
+                            </div>
+                        )}
+                    >
+                        {this.state.actions.map(doc => (
+                            <MenuItem key={doc.id} value={doc.data().textOrWAV}>
+                                {doc.data().textOrWAV}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 </form>
                 <Button
                   variant="contained"

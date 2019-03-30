@@ -1,0 +1,18 @@
+.main {
+    position: relative;
+}
+
+.add-new-btn {
+    position: absolute !important;
+    right: 10px;
+    top: 5px;
+}
+
+.new-action-modal {
+    padding: 10px;
+    width: 100%;
+}
+
+.question {
+    width: 80%;
+}

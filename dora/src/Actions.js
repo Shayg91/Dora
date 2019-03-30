@@ -14,7 +14,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import AddIcon from "@material-ui/icons/Add";
 import StarIcon from "@material-ui/icons/Star";
 import ThreeSixtyIcon from "@material-ui/icons/ThreeSixty";
-
 import "./Actions.css";
 import Action from "./partials/Action";
 
@@ -102,7 +101,7 @@ class Actions extends Component {
     return (
       <div className="main">
         <h3>Actions</h3>
-        <Grid
+          <Grid
           container
           direction="column"
           justify="space-around"
