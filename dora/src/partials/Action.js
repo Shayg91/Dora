@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import firebase from "../scripts/Dora";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { Typography, ButtonBase } from "../../node_modules/@material-ui/core";
@@ -10,6 +11,13 @@ import "./Action.css";
 class Action extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      storage: firebase
+        .storage()
+        .ref()
+        .child("images")
+    };
   }
 
   render() {
@@ -23,8 +31,11 @@ class Action extends Component {
                   <img
                     className="img"
                     alt="complex"
-                    src={doc.data().affectPath}
+                    src={this.state.storage.child(doc.data().affectPath)}
                   />
+                  {console.log(
+                    this.state.storage.child(doc.data().affectPath).fullPath
+                  )}
                 </ButtonBase>
               </Grid>
               <Grid item xs={6} sm container>
