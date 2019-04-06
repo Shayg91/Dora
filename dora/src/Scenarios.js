@@ -1,24 +1,25 @@
 import React, { Component } from "react";
 import firebase from "./scripts/Dora";
 import {
-    TextField,
-    Button,
-    Paper,
-    Snackbar,
-    IconButton,
-    InputLabel,
-    Chip,
-    Grid,
-    FormControl,
-    Select,
-    Input,
-    MenuItem
+  TextField,
+  Button,
+  Paper,
+  Snackbar,
+  IconButton,
+  InputLabel,
+  Chip,
+  Grid,
+  FormControl,
+  Select,
+  Input,
+  MenuItem
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import StarIcon from "@material-ui/icons/Star";
 import "./Scenarios.css";
 
 import Scenario from "./partials/Scenario";
+import NewScenario from "./partials/NewScenario";
 
 class Scenarios extends Component {
   constructor(props) {
@@ -90,15 +91,15 @@ class Scenarios extends Component {
   }
 
   handleFieldChange = field => event => {
-      let data = { ...this.state.data };
-      data[field] = event.target.value;
-      this.setState({ data });
+    let data = { ...this.state.data };
+    data[field] = event.target.value;
+    this.setState({ data });
   };
 
   handleChange = event => {
-      this.setState({
-          data: { ...this.state.data, actions: event.target.value }
-        });
+    this.setState({
+      data: { ...this.state.data, actions: event.target.value }
+    });
   };
 
   handleClose = (event, reason) => {
@@ -109,20 +110,19 @@ class Scenarios extends Component {
   };
 
   handleChangeMultiple = event => {
-      const { options } = event.target;
-      const value = [];
-      for (let i = 0, l = options.length; i < l; i += 1) {
-          if (options[i].selected) {
-              value.push(options[i].value);
-          }
+    const { options } = event.target;
+    const value = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        value.push(options[i].value);
       }
-      this.setState({
-          data: { ...this.state.data, scenarios: value }
-      });
+    }
+    this.setState({
+      data: { ...this.state.data, scenarios: value }
+    });
   };
 
-
-    render() {
+  render() {
     return (
       <div className="main">
         <h3>Scenarios</h3>
@@ -132,81 +132,7 @@ class Scenarios extends Component {
           justify="space-around"
           alignItems="stretch"
         >
-          {!this.state.add_new ? (
-            <Paper className="paper">
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="flex-start"
-                spacing={16}
-              >
-                <form>
-                  <TextField
-                    id="title"
-                    label="Title"
-                    fullWidth
-                    value={this.state.data.title}
-                    onChange={this.handleFieldChange("title")}
-                    margin="normal"
-                  />
-                  <br />
-                  <TextField
-                      id="level"
-                      label="Level"
-                      select
-                      value={this.state.data.level}
-                      onChange={this.handleFieldChange("level")}
-                      margin="normal"
-                  >
-                    <MenuItem key="1" value="1">
-                      <StarIcon />
-                    </MenuItem>
-                    <MenuItem key="2" value="2">
-                      <StarIcon />
-                      <StarIcon />
-                    </MenuItem>
-                    <MenuItem key="3" value="3">
-                      <StarIcon />
-                      <StarIcon />
-                      <StarIcon />
-                    </MenuItem>
-                  </TextField>
-                <FormControl fullWidth>
-                    <InputLabel htmlFor="select-multiple-chip">
-                        Select actions for this scenario:
-                    </InputLabel>
-                    <Select
-                        multiple
-                        value={this.state.data.actions}
-                        onChange={this.handleChange}
-                        input={<Input id="select-multiple-chip" />}
-                        renderValue={selected => (
-                            <div>
-                                {selected.map(value => (
-                                    <Chip key={value} label={value} />
-                                ))}
-                            </div>
-                        )}
-                    >
-                        {this.state.actions.map(doc => (
-                            <MenuItem key={doc.id} value={doc.data().textOrWAV}>
-                                {doc.data().textOrWAV}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                </form>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={this.handleSubmit}
-                >
-                  Save
-                </Button>
-              </Grid>
-            </Paper>
-          ) : null}
+          {!this.state.add_new ? <NewScenario /> : null}
           <Button
             variant="contained"
             className="add-new-btn"

@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import firebase from "../scripts/Dora";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import { Typography, ButtonBase } from "../../node_modules/@material-ui/core";
-import StarIcon from "../../node_modules/@material-ui/icons/Star";
+import {
+  Typography,
+  ButtonBase,
+  Card,
+  CardContent,
+  CardHeader
+} from "../../node_modules/@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import "./Action.css";
@@ -24,39 +29,23 @@ class Action extends Component {
     return (
       <div>
         {this.props.data.map(doc => (
-          <Paper key={doc.id} className="paper">
-            <Grid container spacing={16}>
-              <Grid item>
-                <ButtonBase className="image">
-                  <img
-                    className="img"
-                    alt="complex"
-                    src={this.state.storage.child(doc.data().affectPath)}
-                  />
-                  {console.log(
-                    this.state.storage.child(doc.data().affectPath).fullPath
-                  )}
-                </ButtonBase>
-              </Grid>
-              <Grid item xs={6} sm container>
-                <Grid item xs container direction="column" spacing={16}>
-                  <Grid item xs>
-                    <Typography gutterBottom variant="subtitle1">
-                      {doc.data().textOrWAV}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <DeleteIcon />
-                  </Grid>
+          <Card>
+            <CardHeader
+              title={
+                <Typography variant="title" gutterBottom>
+                  {doc.textOrWAV}
+                </Typography>
+              }
+            />
+            <CardContent>
+              <Grid>
+                <Grid>
+                  <Typography variant="subheader">{doc.whatToPlay}</Typography>
                 </Grid>
-                <Grid item>
-                  <Typography variant="subtitle1">
-                    <StarIcon />
-                  </Typography>
-                </Grid>
+                <Grid>for face</Grid>
               </Grid>
-            </Grid>
-          </Paper>
+            </CardContent>
+          </Card>
         ))}
       </div>
     );

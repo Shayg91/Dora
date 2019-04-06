@@ -1,60 +1,120 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
-import Fab from '@material-ui/core/Fab'; 
-import AddIcon from '@material-ui/icons/Add'
-import Button from '@material-ui/core/Button'
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
-import './NewScenario.css'
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
 
-class NewScenario extends Component{
-    constructor(props) {
-        super(props);
+import { TextField, Button, Paper, Grid, MenuItem } from "@material-ui/core";
+import StarIcon from "@material-ui/icons/Star";
 
-        this.classes = props;
-        this.scenarios = [];
+import "./NewScenario.css";
+import NewAction from "./NewAction";
+import Action from "./Action";
 
-        this.state = {
-            open: false
-        };
-    }
+class NewScenario extends Component {
+  constructor(props) {
+    super(props);
 
-    handleOpen = () => {
-        this.setState({ open: true });
-      };
-    
-      handleClose = () => {
-        this.setState({ open: false });
-      };
+    this.state = {
+      data: {
+        title: "",
+        level: 1,
+        actions: [],
+        affectPath: ""
+      },
+      newAction: {
+        effect: 1,
+        textOrWAV: "",
+        whatToPlay: ""
+      }
+    };
 
-    render(){
-        return(
-        <div>
-            <Grid item>
-                <Paper onClick={this.handleOpen}><AddIcon/></Paper>
-            </Grid>
-            
-            <Modal open={this.state.open} onClose={this.handleClose} className='modal'>
-                <div className='modal-main'>
-                    <Typography variant="h6" id="modal-title">
-                    Text in a modal
-                    </Typography>
-                    <Typography variant="subtitle1" id="simple-modal-description">
-                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                    </Typography>
-                    <Button onClick={this.props.addScenario}>Add New Scenario</Button>
-                </div>
-            </Modal>
-        </div>);
-    }
+    this.handleFieldChange = this.handleFieldChange.bind(this);
+  }
+
+  render() {
+    return (
+      <Paper className="paper">
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          alignItems="flex-start"
+          spacing={16}
+        >
+          <form>
+            <TextField
+              id="title"
+              label="Title"
+              fullWidth
+              value={this.state.data.title}
+              onChange={this.handleFieldChange("title")}
+              margin="normal"
+            />
+            <br />
+            <TextField
+              id="level"
+              label="Level"
+              select
+              value={this.state.data.level}
+              onChange={this.handleFieldChange("level")}
+              margin="normal"
+            >
+              <MenuItem key="1" value="1">
+                <StarIcon />
+              </MenuItem>
+              <MenuItem key="2" value="2">
+                <StarIcon />
+                <StarIcon />
+              </MenuItem>
+              <MenuItem key="3" value="3">
+                <StarIcon />
+                <StarIcon />
+                <StarIcon />
+              </MenuItem>
+            </TextField>
+            <Action data={this.state.data.actions} />
+            <NewAction addAction={this.handleActionSubmit} />
+          </form>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={this.handleSubmit}
+          >
+            Save
+          </Button>
+        </Grid>
+      </Paper>
+    );
+  }
+
+  handleFieldChange = field => event => {
+    let data = { ...this.state.data };
+    data[field] = event.target.value;
+    this.setState({ data });
+  };
+
+  handleSubmit(event) {
+    this.state.ref_main.add(this.state.data);
+    this.setState(state => ({
+      added: !state.added,
+      add_new: !state.add_new,
+      data: {
+        title: "",
+        level: 1,
+        actions: [],
+        affectPath: ""
+      }
+    }));
+    event.preventDefault();
+  }
+
+  handleActionSubmit = action => {
+    console.log("got here!");
+    let actionsList = [...this.state.data.actions];
+    actionsList.push(action);
+    this.setState({
+      data: { ...this.state.data, actions: actionsList }
+    });
+    console.log(this.state.data);
+  };
 }
 
 export default NewScenario;
-
-/*
-<Fab color="secondary" aria-label="Edit" className={this.classes.fab} onClick={this.handleOpen} style="">
-                <AddIcon/>
-            </Fab>
-*/
