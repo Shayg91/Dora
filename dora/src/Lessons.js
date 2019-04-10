@@ -118,18 +118,6 @@ class Lessons extends Component {
     });
   };
 
-  handleChangeMultiple = event => {
-    const { options } = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    this.setState({
-      data: { ...this.state.data, scenarios: value }
-    });
-  };
 
   render() {
     return (
@@ -210,8 +198,8 @@ class Lessons extends Component {
                       )}
                     >
                       {this.state.scenarios.map(doc => (
-                        <MenuItem key={doc.id} value={doc.data().title}>
-                          {doc.data().title}
+                        <MenuItem key={doc.id} value={doc.data().name}>
+                          {doc.data().name}
                         </MenuItem>
                       ))}
                     </Select>
