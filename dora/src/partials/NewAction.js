@@ -34,21 +34,21 @@ class NewAction extends Component {
               <SaveIcon onClick={this.handleSubmit} />
             </IconButton>
           }
-          title={
-            <TextField
-              id="question"
-              label="Title"
-              fullWidth
-              multiline
-              label="What to Say"
-              value={this.state.data.textOrWAV}
-              onChange={this.handleFieldChange("textOrWAV")}
-              margin="normal"
-            />
-          }
         />
         <CardContent>
           <Grid>
+            <Grid>
+              <TextField
+                id="question"
+                label="Title"
+                fullWidth
+                multiline
+                label="What to Say"
+                value={this.state.data.textOrWAV}
+                onChange={this.handleFieldChange("textOrWAV")}
+                margin="normal"
+              />
+            </Grid>
             <Grid>
               <TextField
                 id="effect"

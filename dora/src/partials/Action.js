@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import {
   Typography,
-  ButtonBase,
+  IconButton,
   Card,
   CardContent,
   CardHeader
@@ -27,29 +27,37 @@ class Action extends Component {
 
   render() {
     return (
-      <div>
+      <Grid container direction="row" justify="center" alignItems="center">
         {this.props.data.map(doc => (
-          <Card>
+          <Card key={doc.id} item xs={6}>
             <CardHeader
-              title={
-                <Typography variant="title" gutterBottom>
-                  {doc.textOrWAV}
-                </Typography>
+              action={
+                <IconButton>
+                  <DeleteIcon onClick={this.handleDelete} />
+                </IconButton>
               }
             />
             <CardContent>
               <Grid>
                 <Grid>
+                  <Typography variant="subheader">{doc.textOrWAV}</Typography>
+                </Grid>
+                <Grid>
                   <Typography variant="subheader">{doc.whatToPlay}</Typography>
                 </Grid>
-                <Grid>for face</Grid>
+                <Grid>{doc.effect}</Grid>
               </Grid>
             </CardContent>
           </Card>
         ))}
-      </div>
+      </Grid>
     );
   }
+
+  handleDelete = event => {
+    console.log(event.target.value);
+    //this.props.deleteAction(event.target.id);
+  };
 }
 
 export default Action;

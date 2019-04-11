@@ -14,15 +14,30 @@ class NewScenario extends Component {
 
     this.state = {
       data: {
-        title: "",
+        name: "",
         level: 1,
         actions: [],
-        affectPath: ""
-      },
-      newAction: {
-        effect: 1,
-        textOrWAV: "",
-        whatToPlay: ""
+        waitFor: {
+          expectedAnswer: {
+            input: "",
+            successRating: 0
+          },
+          typeOfWaiting: 1,
+          typeOfInput: ""
+        },
+        onSuccess: {
+          action: {
+            effect: 1,
+            textOrWAV: "",
+            whatToPlay: ""
+          },
+          nextScenarioID: ""
+        },
+        onfailure: {
+          action: { effect: 1, textOrWAV: "", whatToPlay: "" },
+          numOfRetries: 2,
+          nextScenarioID: ""
+        }
       }
     };
 
@@ -31,7 +46,7 @@ class NewScenario extends Component {
 
   render() {
     return (
-      <Paper className="paper">
+      <Paper className="new-scenario-paper">
         <Grid
           container
           direction="column"
@@ -39,16 +54,21 @@ class NewScenario extends Component {
           alignItems="flex-start"
           spacing={16}
         >
-          <form>
+          <Grid
+            direction="row"
+            container
+            justify="flext-start"
+            alignItems="flex-end"
+            spacing={16}
+          >
             <TextField
-              id="title"
+              id="name"
               label="Title"
               fullWidth
-              value={this.state.data.title}
-              onChange={this.handleFieldChange("title")}
+              value={this.state.data.name}
+              onChange={this.handleFieldChange("name")}
               margin="normal"
             />
-            <br />
             <TextField
               id="level"
               label="Level"
@@ -70,16 +90,29 @@ class NewScenario extends Component {
                 <StarIcon />
               </MenuItem>
             </TextField>
-            <Action data={this.state.data.actions} />
-            <NewAction addAction={this.handleActionSubmit} />
-          </form>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={this.handleSubmit}
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="flex-start"
+            spacing={16}
           >
-            Save
-          </Button>
+            {this.state.data.actions.length !== 1 ? (
+              <NewAction addAction={this.handleActionSubmit} />
+            ) : (
+              <Action data={this.state.data.actions} />
+            )}
+          </Grid>
+          <Grid>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.handleSubmit}
+            >
+              Save
+            </Button>
+          </Grid>
         </Grid>
       </Paper>
     );
@@ -97,7 +130,7 @@ class NewScenario extends Component {
       added: !state.added,
       add_new: !state.add_new,
       data: {
-        title: "",
+        name: "",
         level: 1,
         actions: [],
         affectPath: ""
