@@ -14,6 +14,8 @@ import StarIcon from "@material-ui/icons/Star";
 import "./NewScenario.css";
 import NewAction from "./NewAction";
 import Action from "./Action";
+import NewAnswer from "./NewAnswer";
+import Answer from "./Answer";
 
 class NewScenario extends Component {
   constructor(props) {
@@ -108,7 +110,7 @@ class NewScenario extends Component {
           >
             <Grid item className="sub-titles">
               <Typography variant="subtitle2" gutterBottom>
-                Action Data:
+                Action Info:
               </Typography>
             </Grid>
             <Grid item xs={6} margin="normal">
@@ -124,21 +126,24 @@ class NewScenario extends Component {
           </Grid>
           <Grid
             container
-            direction="row"
-            justify="center"
+            direction="column"
+            justify="flex-start"
             alignItems="flex-start"
-            spacing={16}
           >
-            <Grid item>
-              <Typography noWrap>What should we wait for?</Typography>
-              <TextField
-                id="answer"
-                label="Answer"
-                fullWidth
-                value={this.state.data.waitFor.expectedAnswer.input}
-                onChange={this.handleFieldChange("input", 1)}
-                margin="normal"
-              />
+            <Grid item className="sub-titles">
+              <Typography variant="subtitle2" gutterBottom>
+                Answer Info:
+              </Typography>
+            </Grid>
+            <Grid item xs={6} margin="normal">
+              {this.state.data.waitFor.expectedAnswer.input === "" ? (
+                <NewAnswer addAnswer={this.handleAnswerSubmit} />
+              ) : (
+                <Answer
+                  answer={this.state.data.waitFor}
+                  deleteAnswer={this.handleAnswerDelete}
+                />
+              )}
             </Grid>
           </Grid>
           <Grid>
@@ -195,6 +200,31 @@ class NewScenario extends Component {
     console.log("deleting...");
     this.setState({
       data: { ...this.state.data, actions: [] }
+    });
+  };
+
+  handleAnswerSubmit = answer => {
+    let newWaitFor = this.state.data.waitFor;
+    newWaitFor.expectedAnswer = answer;
+    this.setState({
+      data: { ...this.state.data, waitFor: newWaitFor }
+    });
+  };
+
+  handleAnswerDelete = () => {
+    console.log("deleting...");
+    this.setState({
+      data: {
+        ...this.state.data,
+        waitFor: {
+          expectedAnswer: {
+            input: "",
+            successRating: 0
+          },
+          typeOfWaiting: 1,
+          typeOfInput: ""
+        }
+      }
     });
   };
 }
