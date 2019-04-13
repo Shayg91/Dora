@@ -1,5 +1,21 @@
 .new-scenario-paper {
-  background-color: green;
-  padding: 10px;
+}
+
+.title-block {
+  margin: 10px;
   width: 100%;
+}
+
+.title {
+  width: 75%;
+  margin-left: 16px;
+}
+
+.level {
+  width: 15%;
+  margin-left: 16px;
+}
+
+.sub-titles {
+  margin-left: 10px !important;
 }

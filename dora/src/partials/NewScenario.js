@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 
-import { TextField, Button, Paper, Grid, MenuItem } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Paper,
+  Grid,
+  MenuItem,
+  Typography
+} from "@material-ui/core";
 import StarIcon from "@material-ui/icons/Star";
 
 import "./NewScenario.css";
@@ -52,44 +59,65 @@ class NewScenario extends Component {
           direction="column"
           justify="center"
           alignItems="flex-start"
-          spacing={16}
         >
           <Grid
+            className="title-block"
             direction="row"
             container
-            justify="flext-start"
+            justify="flex-start"
             alignItems="flex-end"
-            spacing={16}
           >
-            <TextField
-              id="name"
-              label="Title"
-              fullWidth
-              value={this.state.data.name}
-              onChange={this.handleFieldChange("name")}
-              margin="normal"
-            />
-            <TextField
-              id="level"
-              label="Level"
-              select
-              value={this.state.data.level}
-              onChange={this.handleFieldChange("level")}
-              margin="normal"
-            >
-              <MenuItem key="1" value="1">
-                <StarIcon />
-              </MenuItem>
-              <MenuItem key="2" value="2">
-                <StarIcon />
-                <StarIcon />
-              </MenuItem>
-              <MenuItem key="3" value="3">
-                <StarIcon />
-                <StarIcon />
-                <StarIcon />
-              </MenuItem>
-            </TextField>
+            <Grid item sm={6}>
+              <TextField
+                className="title"
+                id="name"
+                label="Title"
+                value={this.state.data.name}
+                onChange={this.handleFieldChange("name")}
+              />
+            </Grid>
+            <Grid item sm={6}>
+              <TextField
+                className="level"
+                id="level"
+                label="Level"
+                select
+                value={this.state.data.level}
+                onChange={this.handleFieldChange("level")}
+              >
+                <MenuItem key="1" value="1">
+                  <StarIcon />
+                </MenuItem>
+                <MenuItem key="2" value="2">
+                  <StarIcon />
+                  <StarIcon />
+                </MenuItem>
+                <MenuItem key="3" value="3">
+                  <StarIcon />
+                  <StarIcon />
+                  <StarIcon />
+                </MenuItem>
+              </TextField>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="flex-start"
+          >
+            <Grid item className="sub-titles">
+              <Typography variant="subtitle2" gutterBottom>
+                Action Data:
+              </Typography>
+            </Grid>
+            <Grid item xs={6} margin="normal">
+              {this.state.data.actions.length !== 1 ? (
+                <NewAction addAction={this.handleActionSubmit} />
+              ) : (
+                <Action data={this.state.data.actions} />
+              )}
+            </Grid>
           </Grid>
           <Grid
             container
@@ -98,11 +126,17 @@ class NewScenario extends Component {
             alignItems="flex-start"
             spacing={16}
           >
-            {this.state.data.actions.length !== 1 ? (
-              <NewAction addAction={this.handleActionSubmit} />
-            ) : (
-              <Action data={this.state.data.actions} />
-            )}
+            <Grid item>
+              <Typography noWrap>What should we wait for?</Typography>
+              <TextField
+                id="answer"
+                label="Answer"
+                fullWidth
+                value={this.state.data.waitFor.expectedAnswer.input}
+                onChange={this.handleFieldChange("input", 1)}
+                margin="normal"
+              />
+            </Grid>
           </Grid>
           <Grid>
             <Button
@@ -118,9 +152,14 @@ class NewScenario extends Component {
     );
   }
 
-  handleFieldChange = field => event => {
+  handleFieldChange = (field, caseType = 0) => event => {
     let data = { ...this.state.data };
     data[field] = event.target.value;
+    if (caseType === 0) {
+      data[field] = event.target.value;
+    } else if (caseType === 1) {
+      data["waitFor"]["expectedAnswer"][field] = event.target.value;
+    }
     this.setState({ data });
   };
 
