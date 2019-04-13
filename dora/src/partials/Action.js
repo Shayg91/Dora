@@ -3,7 +3,6 @@ import firebase from "../scripts/Dora";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { Typography, Button } from "../../node_modules/@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 import "./Action.css";
 
@@ -36,11 +35,11 @@ class Action extends Component {
                 justify="flex-start"
                 alignItems="flex-end"
               >
-                <Grid item xs={12}>
-                  <Typography variant="subheader">{doc.textOrWAV}</Typography>
+                <Grid item xs={12} nowrap>
+                  <Typography variant="subtitle1">{doc.textOrWAV}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="subheader">{doc.whatToPlay}</Typography>
+                  <Typography variant="subtitle1">{doc.whatToPlay}</Typography>
                 </Grid>
                 <Grid
                   container
@@ -53,7 +52,7 @@ class Action extends Component {
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={this.handleSubmit}
+                      onClick={this.handleDelete}
                       color="secondary"
                       className="save-btn"
                     >
@@ -70,8 +69,7 @@ class Action extends Component {
   }
 
   handleDelete = event => {
-    console.log(event.target.value);
-    //this.props.deleteAction(event.target.id);
+    this.props.deleteAction();
   };
 }
 

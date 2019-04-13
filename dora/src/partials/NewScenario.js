@@ -115,7 +115,10 @@ class NewScenario extends Component {
               {this.state.data.actions.length !== 1 ? (
                 <NewAction addAction={this.handleActionSubmit} />
               ) : (
-                <Action data={this.state.data.actions} />
+                <Action
+                  data={this.state.data.actions}
+                  deleteAction={this.handleActionDelete}
+                />
               )}
             </Grid>
           </Grid>
@@ -186,6 +189,13 @@ class NewScenario extends Component {
       data: { ...this.state.data, actions: actionsList }
     });
     console.log(this.state.data);
+  };
+
+  handleActionDelete = () => {
+    console.log("deleting...");
+    this.setState({
+      data: { ...this.state.data, actions: [] }
+    });
   };
 }
 
