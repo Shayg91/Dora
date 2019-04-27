@@ -38,40 +38,37 @@ class NewAction extends Component {
           >
             <Grid item xs={12}>
               <TextField
-                id="answer"
-                fullWidth
-                multiline
-                label="Answer"
-                value={this.state.data.expectedAnswer.input}
-                onChange={this.handleFieldChange("input", true)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
                 id="typeOfInput"
                 label="Type of Input"
                 select
                 fullWidth
                 value={this.state.data.typeOfInput}
                 onChange={this.handleFieldChange("typeOfInput")}
+                onBlur={this.handleSubmit}
               >
-                <MenuItem key="1" value="1">
-                  Type 1 -
+                <MenuItem key="1" value="inputText">
+                  Type 1 - Text
                 </MenuItem>
-                <MenuItem key="2" value="2">
-                  Type 2 -
+                <MenuItem key="2" value="speech">
+                  Type 2 - Speech
                 </MenuItem>
-                <MenuItem key="3" value="3">
-                  Type 3 -
-                </MenuItem>
-                <MenuItem key="4" value="4">
-                  Type 4 -
-                </MenuItem>
-                <MenuItem key="5" value="5">
-                  Type 5 -
+                <MenuItem key="3" value="mulChoice">
+                  Type 3 - Text & Speech
                 </MenuItem>
               </TextField>
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="answer"
+                fullWidth
+                multiline
+                label="Answer"
+                value={this.state.data.expectedAnswer.input}
+                onChange={this.handleFieldChange("input", true)}
+                onBlur={this.handleSubmit}
+              />
+            </Grid>
+
             <Grid
               container
               direction="row"
@@ -85,16 +82,8 @@ class NewAction extends Component {
                   label="Success Rating"
                   value={this.state.data.expectedAnswer.successRating}
                   onChange={this.handleFieldChange("successRating", true)}
+                  onBlur={this.handleSubmit}
                 />
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={this.handleSubmit}
-                  color="secondary"
-                  className="save-btn"
-                >
-                  Save Answer
-                </Button>
               </Grid>
             </Grid>
           </Grid>
@@ -115,16 +104,6 @@ class NewAction extends Component {
 
   handleSubmit = event => {
     this.props.addAnswer(this.state.data);
-    this.setState(state => ({
-      data: {
-        expectedAnswer: {
-          input: "",
-          successRating: 75
-        },
-        typeOfWaiting: 1,
-        typeOfInput: ""
-      }
-    }));
     event.preventDefault();
   };
 }

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 
+import firebase from "../scripts/Dora";
+
 import {
   TextField,
   Button,
@@ -13,15 +15,16 @@ import StarIcon from "@material-ui/icons/Star";
 
 import "./NewScenario.css";
 import NewAction from "./NewAction";
-import Action from "./Action";
+import NewSuccess from "./NewSuccess";
 import NewAnswer from "./NewAnswer";
-import Answer from "./Answer";
+import NewFailure from "./NewFailure";
 
 class NewScenario extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      ref_main: firebase.firestore().collection("scenario"),
       data: {
         name: "",
         level: 1,
@@ -51,6 +54,7 @@ class NewScenario extends Component {
     };
 
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   render() {
@@ -102,58 +106,83 @@ class NewScenario extends Component {
               </TextField>
             </Grid>
           </Grid>
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="flex-start"
-          >
-            <Grid item className="sub-titles">
-              <Typography variant="subtitle2" gutterBottom>
-                Action Info:
-              </Typography>
-            </Grid>
-            <Grid item xs={6} margin="normal">
-              {this.state.data.actions.length !== 1 ? (
-                <NewAction addAction={this.handleActionSubmit} />
-              ) : (
-                <Action
-                  data={this.state.data.actions}
-                  deleteAction={this.handleActionDelete}
-                />
-              )}
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="flex-start"
-          >
-            <Grid item className="sub-titles">
-              <Typography variant="subtitle2" gutterBottom>
-                Answer Info:
-              </Typography>
-            </Grid>
-            <Grid item xs={6} margin="normal">
-              {this.state.data.waitFor.expectedAnswer.input === "" ? (
-                <NewAnswer addAnswer={this.handleAnswerSubmit} />
-              ) : (
-                <Answer
-                  answer={this.state.data.waitFor}
-                  deleteAnswer={this.handleAnswerDelete}
-                />
-              )}
-            </Grid>
-          </Grid>
-          <Grid>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.handleSubmit}
+          <Grid container direction="row" alignContent="flex-start">
+            <Grid
+              container
+              direction="column"
+              justify="flex-start"
+              alignItems="flex-start"
             >
-              Save
-            </Button>
+              <Grid item className="sub-titles">
+                <Typography variant="subtitle2" gutterBottom>
+                  Question Info:
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <NewAction addAction={this.handleActionSubmit} />
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="column"
+              justify="flex-start"
+              alignItems="flex-start"
+            >
+              <Grid item className="sub-titles">
+                <Typography variant="subtitle2" gutterBottom>
+                  Answer Info:
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <NewAnswer addAnswer={this.handleAnswerSubmit} />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="flex-start"
+          >
+            <Grid item className="sub-titles">
+              <Typography variant="subtitle2" gutterBottom>
+                What should happen when there is a correct answer:
+              </Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <NewSuccess addSuccess={this.handleSuccessSubmit} />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="flex-start"
+          >
+            <Grid item className="sub-titles">
+              <Typography variant="subtitle2" gutterBottom>
+                What should happen when there is an incorrect answer:
+              </Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <NewFailure addFailure={this.handleFailureSubmit} />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="flex-end"
+          >
+            <Grid item>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={this.handleSubmit}
+              >
+                Save Scenario
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Paper>
@@ -180,42 +209,6 @@ class NewScenario extends Component {
         name: "",
         level: 1,
         actions: [],
-        affectPath: ""
-      }
-    }));
-    event.preventDefault();
-  }
-
-  handleActionSubmit = action => {
-    console.log("got here!");
-    let actionsList = [...this.state.data.actions];
-    actionsList.push(action);
-    this.setState({
-      data: { ...this.state.data, actions: actionsList }
-    });
-    console.log(this.state.data);
-  };
-
-  handleActionDelete = () => {
-    console.log("deleting...");
-    this.setState({
-      data: { ...this.state.data, actions: [] }
-    });
-  };
-
-  handleAnswerSubmit = answer => {
-    let newWaitFor = this.state.data.waitFor;
-    newWaitFor.expectedAnswer = answer;
-    this.setState({
-      data: { ...this.state.data, waitFor: newWaitFor }
-    });
-  };
-
-  handleAnswerDelete = () => {
-    console.log("deleting...");
-    this.setState({
-      data: {
-        ...this.state.data,
         waitFor: {
           expectedAnswer: {
             input: "",
@@ -223,9 +216,52 @@ class NewScenario extends Component {
           },
           typeOfWaiting: 1,
           typeOfInput: ""
+        },
+        onSuccess: {
+          action: {
+            effect: 1,
+            textOrWAV: "",
+            whatToPlay: ""
+          },
+          nextScenarioID: ""
+        },
+        onfailure: {
+          action: { effect: 1, textOrWAV: "", whatToPlay: "" },
+          numOfRetries: 2,
+          nextScenarioID: ""
         }
       }
+    }));
+    event.preventDefault();
+  }
+
+  handleActionSubmit = action => {
+    let actionsList = [...this.state.data.actions];
+    actionsList.push(action);
+    this.setState({
+      data: { ...this.state.data, actions: actionsList }
     });
+  };
+
+  handleAnswerSubmit = answer => {
+    this.setState({
+      data: { ...this.state.data, waitFor: answer }
+    });
+    console.log("updated");
+  };
+
+  handleSuccessSubmit = success => {
+    this.setState({
+      data: { ...this.state.data, onSuccess: success }
+    });
+    console.log("updated");
+  };
+
+  handleFailureSubmit = failure => {
+    this.setState({
+      data: { ...this.state.data, onfailure: failure }
+    });
+    console.log("updated");
   };
 }
 
