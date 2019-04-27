@@ -2,14 +2,7 @@ import React, { Component } from "react";
 import firebase from "../scripts/Dora";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import {
-  Typography,
-  ButtonBase,
-  Card,
-  CardContent,
-  CardHeader
-} from "../../node_modules/@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { Typography, Button } from "../../node_modules/@material-ui/core";
 
 import "./Action.css";
 
@@ -27,29 +20,57 @@ class Action extends Component {
 
   render() {
     return (
-      <div>
+      <Grid container direction="row" justify="center" alignItems="center">
         {this.props.data.map(doc => (
-          <Card>
-            <CardHeader
-              title={
-                <Typography variant="title" gutterBottom>
-                  {doc.textOrWAV}
-                </Typography>
-              }
-            />
-            <CardContent>
-              <Grid>
-                <Grid>
-                  <Typography variant="subheader">{doc.whatToPlay}</Typography>
+          <Paper className="action">
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="flex-start"
+            >
+              <Grid
+                direction="row"
+                container
+                justify="flex-start"
+                alignItems="flex-end"
+              >
+                <Grid item xs={12} nowrap>
+                  <Typography variant="subtitle1">{doc.textOrWAV}</Typography>
                 </Grid>
-                <Grid>for face</Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1">{doc.whatToPlay}</Typography>
+                </Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-between"
+                  alignItems="center"
+                >
+                  <Grid item xs={6}>
+                    {doc.effect}
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={this.handleDelete}
+                      color="secondary"
+                      className="save-btn"
+                    >
+                      Delete Action
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
-            </CardContent>
-          </Card>
+            </Grid>
+          </Paper>
         ))}
-      </div>
+      </Grid>
     );
   }
+
+  handleDelete = event => {
+    this.props.deleteAction();
+  };
 }
 
 export default Action;
