@@ -1,0 +1,9 @@
+.sidenav {
+  background-color: green;
+}
+
+.content {
+  background-color: aqua;
+  height: 100%;
+  width: 80%;
+}

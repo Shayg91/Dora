@@ -12,9 +12,16 @@ import {
   FormControl,
   Select,
   Input,
-  MenuItem
+  MenuItem,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Card,
+  CardContent
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+import ChildCareIcon from "@material-ui/icons/ChildCare";
 import StarIcon from "@material-ui/icons/Star";
 import "./Scenarios.css";
 
@@ -27,24 +34,16 @@ class Scenarios extends Component {
 
     this.state = {
       scenarios: [],
-      actions: [],
       ref_main: firebase.firestore().collection("scenario"),
-      ref_secondary: firebase.firestore().collection("action"),
       add_new: true,
       added: false,
-      data: {
-        title: "",
-        level: 1,
-        actions: [],
-        affectPath: ""
-      }
+      selected_scenario: null
     };
 
     this.handleToggleClick = this.handleToggleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.getAllScenarios();
-    this.getAllActions();
   }
 
   getAllScenarios() {
@@ -53,17 +52,6 @@ class Scenarios extends Component {
       querySnapshot.forEach(function(doc) {
         currentComponent.setState(state => ({
           scenarios: [...state.scenarios, doc]
-        }));
-      });
-    });
-  }
-
-  getAllActions() {
-    let currentComponent = this;
-    this.state.ref_secondary.get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-        currentComponent.setState(state => ({
-          actions: [...state.actions, doc]
         }));
       });
     });
@@ -79,13 +67,7 @@ class Scenarios extends Component {
     this.state.ref_main.add(this.state.data);
     this.setState(state => ({
       added: !state.added,
-      add_new: !state.add_new,
-      data: {
-        title: "",
-        level: 1,
-        actions: "",
-        affectPath: ""
-      }
+      add_new: !state.add_new
     }));
     event.preventDefault();
   }
@@ -124,8 +106,49 @@ class Scenarios extends Component {
 
   render() {
     return (
-      <div className="main">
-        <h3>Scenarios</h3>
+      <Grid
+        container
+        direction="row"
+        justify="flex-start"
+        alignItems="stretch"
+        spacing={6}
+      >
+        <Grid item className="sidenav" md={2}>
+          <List component="nav">
+            {this.state.scenarios.map(doc => (
+              <ListItem
+                button
+                selected={this.state.selectedIndex === 0}
+                onClick={event => this.handleListItemClick(event, 0)}
+              >
+                <ListItemIcon>
+                  <ChildCareIcon />
+                </ListItemIcon>
+                <ListItemText primary={doc.data().name} />
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
+        <Grid item className="content" md={10}>
+          <div>jhjksdhjkhdfkjxdhfkjd</div>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  handleScenarioSelected(scenario) {
+    this.setState(
+      {
+        selected_scenario: scenario
+      },
+      console.log(this.state.selected_scenario)
+    );
+  }
+}
+
+export default Scenarios;
+
+/* <h3>Scenarios</h3>
         <Grid
           container
           direction="column"
@@ -163,10 +186,4 @@ class Scenarios extends Component {
               <CloseIcon />
             </IconButton>
           ]}
-        />
-      </div>
-    );
-  }
-}
-
-export default Scenarios;
+        /> */
