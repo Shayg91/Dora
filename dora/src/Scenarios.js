@@ -19,10 +19,14 @@ import {
   ListItemText,
   ListItemIcon,
   Card,
-  CardContent
+  CardContent,
+  Typography
 } from "@material-ui/core";
+
 import ChildCareIcon from "@material-ui/icons/ChildCare";
-import StarIcon from "@material-ui/icons/Star";
+import AddIcon from "@material-ui/icons/Add";
+import CloseIcon from "@material-ui/icons/Close";
+
 import "./Scenarios.css";
 
 import Scenario from "./partials/Scenario";
@@ -35,15 +39,100 @@ class Scenarios extends Component {
     this.state = {
       scenarios: [],
       ref_main: firebase.firestore().collection("scenario"),
-      add_new: true,
+      add_new: false,
       added: false,
       selected_scenario: null
     };
 
     this.handleToggleClick = this.handleToggleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleScenarioSelected = this.handleScenarioSelected.bind(this);
     this.getAllScenarios();
+  }
+
+  render() {
+    return (
+      <div>
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="stretch"
+          spacing={6}
+        >
+          <Grid item className="sidenav" md={2}>
+            <Button
+              color="secondary"
+              variant="contained"
+              className="add-btn"
+              onClick={this.handleToggleClick}
+            >
+              <AddIcon />
+              <Typography>Add New Scenario</Typography>
+            </Button>
+            <List component="nav">
+              {this.state.scenarios.map(doc => (
+                <ListItem
+                  button
+                  selected={this.state.selectedIndex === 0}
+                  onClick={event => this.handleScenarioSelected(doc)}
+                >
+                  <ListItemIcon>
+                    <ChildCareIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={doc.name} />
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+          <Grid item className="content">
+            <div>
+              {this.state.selected_scenario == null && !this.state.add_new ? (
+                "No Scenario Selected"
+              ) : !this.state.add_new ? (
+                this.state.selected_scenario.name
+              ) : (
+                <NewScenario addScenario={this.handleSubmit} />
+              )}
+            </div>
+          </Grid>
+        </Grid>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right"
+          }}
+          open={this.state.added}
+          color="secondary"
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          message={<span id="message-id">Scenario Added Successfully!</span>}
+          scenario={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
+      </div>
+    );
+  }
+
+  handleScenarioSelected(doc) {
+    if (this.state.add_new) {
+      this.setState(state => ({
+        add_new: !state.add_new,
+        selected_scenario: doc
+      }));
+    } else {
+      this.setState(state => ({
+        selected_scenario: doc
+      }));
+    }
   }
 
   getAllScenarios() {
@@ -51,7 +140,7 @@ class Scenarios extends Component {
     this.state.ref_main.get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
         currentComponent.setState(state => ({
-          scenarios: [...state.scenarios, doc]
+          scenarios: [...state.scenarios, doc.data()]
         }));
       });
     });
@@ -59,91 +148,19 @@ class Scenarios extends Component {
 
   handleToggleClick() {
     this.setState(state => ({
-      add_new: !state.add_new
+      add_new: !state.add_new,
+      selected_scenario: null
     }));
   }
 
-  handleSubmit(event) {
-    this.state.ref_main.add(this.state.data);
+  handleSubmit = new_scenario => {
     this.setState(state => ({
       added: !state.added,
-      add_new: !state.add_new
+      add_new: !state.add_new,
+      scenarios: [...state.scenarios, new_scenario]
     }));
-    event.preventDefault();
-  }
-
-  handleFieldChange = field => event => {
-    let data = { ...this.state.data };
-    data[field] = event.target.value;
-    this.setState({ data });
+    console.log("updated");
   };
-
-  handleChange = event => {
-    this.setState({
-      data: { ...this.state.data, actions: event.target.value }
-    });
-  };
-
-  handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    this.setState({ added: false });
-  };
-
-  handleChangeMultiple = event => {
-    const { options } = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    this.setState({
-      data: { ...this.state.data, scenarios: value }
-    });
-  };
-
-  render() {
-    return (
-      <Grid
-        container
-        direction="row"
-        justify="flex-start"
-        alignItems="stretch"
-        spacing={6}
-      >
-        <Grid item className="sidenav" md={2}>
-          <List component="nav">
-            {this.state.scenarios.map(doc => (
-              <ListItem
-                button
-                selected={this.state.selectedIndex === 0}
-                onClick={event => this.handleListItemClick(event, 0)}
-              >
-                <ListItemIcon>
-                  <ChildCareIcon />
-                </ListItemIcon>
-                <ListItemText primary={doc.data().name} />
-              </ListItem>
-            ))}
-          </List>
-        </Grid>
-        <Grid item className="content" md={10}>
-          <div>jhjksdhjkhdfkjxdhfkjd</div>
-        </Grid>
-      </Grid>
-    );
-  }
-
-  handleScenarioSelected(scenario) {
-    this.setState(
-      {
-        selected_scenario: scenario
-      },
-      console.log(this.state.selected_scenario)
-    );
-  }
 }
 
 export default Scenarios;

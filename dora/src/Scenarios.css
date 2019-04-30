@@ -1,9 +1,14 @@
 .sidenav {
-  background-color: green;
+  background-color: whitesmoke;
 }
 
 .content {
   background-color: aqua;
+  margin: 10px !important;
   height: 100%;
   width: 80%;
+}
+
+.add-btn {
+  width: -webkit-fill-available;
 }

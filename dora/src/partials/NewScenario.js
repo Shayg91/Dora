@@ -202,6 +202,7 @@ class NewScenario extends Component {
 
   handleSubmit(event) {
     this.state.ref_main.add(this.state.data);
+    this.props.addScenario(this.state.data);
     this.setState(state => ({
       added: !state.added,
       add_new: !state.add_new,
