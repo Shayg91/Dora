@@ -146,6 +146,13 @@ class Scenarios extends Component {
     });
   }
 
+  handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ added: false });
+  };
+
   handleToggleClick() {
     this.setState(state => ({
       add_new: !state.add_new,

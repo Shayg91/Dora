@@ -1,9 +1,10 @@
 .sidenav {
   background-color: whitesmoke;
+  box-shadow: 1px 1px #e1e1e1;
+  height: -webkit-fill-available;
 }
 
 .content {
-  background-color: aqua;
   margin: 10px !important;
   height: 100%;
   width: 80%;
