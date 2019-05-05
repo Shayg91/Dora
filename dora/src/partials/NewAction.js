@@ -8,6 +8,8 @@ import {
   Tooltip
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import FileUploader from "react-firebase-file-uploader";
+import firebase from "../scripts/Dora";
 
 import "./NewAction.css";
 
@@ -16,6 +18,8 @@ class NewAction extends Component {
     super(props);
 
     this.state = {
+      isUploading: false,
+      progress: 0,
       data: {
         effect: "happyFace",
         textOrWAV: "",
@@ -24,9 +28,15 @@ class NewAction extends Component {
     };
 
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleUploadStart = this.handleUploadStart.bind(this);
+    this.handleProgress = this.handleProgress.bind(this);
+    this.handleUploadError = this.handleUploadError.bind(this);
+    this.handleUploadSuccess = this.handleUploadSuccess.bind(this);
   }
 
   render() {
+    console.log("state", this.state);
+    console.log("props", this.props);
     return (
       <Paper className="new-action">
         <Grid
@@ -55,6 +65,7 @@ class NewAction extends Component {
             </Grid>
             <Grid item xs={8}>
               <TextField
+                disabled
                 id="effect"
                 className="action-label"
                 multiline
@@ -67,20 +78,30 @@ class NewAction extends Component {
             </Grid>
             <Grid item>
               <div>
-                <input
+                <FileUploader
+                  accept="image/*"
+                  randomizeFilename
+                  storageRef={firebase.storage().ref("images")}
+                  onUploadStart={this.handleUploadStart}
+                  onUploadError={this.handleUploadError}
+                  onUploadSuccess={this.handleUploadSuccess}
+                  onProgress={this.handleProgress}
+                />
+                {/* <input
                   accept="image/*"
                   style={{ display: "none" }}
                   id="raised-button-file"
                   type="file"
                   onChange={this.handleFieldChange("whatToPlay")}
-                />
-                <label htmlFor="raised-button-file">
+                /> */}
+
+                {/* <label htmlFor="raised-button-file">
                   <Tooltip title="Add Picture" placement="top">
                     <Button component="span">
                       <AddIcon color="secondary" />
                     </Button>
                   </Tooltip>
-                </label>
+                </label> */}
               </div>
             </Grid>
             <Grid
@@ -135,6 +156,29 @@ class NewAction extends Component {
   handleSubmit = event => {
     this.props.addAction(this.state.data);
     event.preventDefault();
+  };
+
+  handleUploadStart = () => this.setState({ isUploading: true, progress: 0 });
+
+  handleProgress = progress => this.setState({ progress });
+
+  handleUploadError = error => {
+    this.setState({ isUploading: false });
+    console.error(error);
+  };
+
+  handleUploadSuccess = filename => {
+    this.setState({
+      data: { whatToPlay: filename },
+      progress: 100,
+      isUploading: false
+    });
+    firebase
+      .storage()
+      .ref("images")
+      .child(filename)
+      .getDownloadURL()
+      .then(url => this.setState({ avatarURL: url }));
   };
 }
 
