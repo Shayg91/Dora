@@ -1,7 +1,16 @@
 import React, { Component } from "react";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import { Typography, ButtonBase } from "../../node_modules/@material-ui/core";
+import {
+  Typography,
+  ButtonBase,
+  Card,
+  CardMedia,
+  CardHeader,
+  CardContent,
+  CardActions,
+  IconButton
+} from "../../node_modules/@material-ui/core";
+
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import "./Scenario.css";
 
@@ -12,45 +21,41 @@ class Scenario extends Component {
 
   render() {
     return (
-      <div>
-        {this.props.data.map(doc => (
-          <Paper key={doc.id} className="paper">
-            <Grid container spacing={16}>
-              <Grid item>
-                <ButtonBase className="image">
-                  <img
-                    className="img"
-                    alt="complex"
-                    src={doc.data().affectPath}
-                  />
-                </ButtonBase>
-              </Grid>
-              <Grid item xs={6} sm container>
-                <Grid item xs container direction="column" spacing={16}>
-                  <Grid item xs>
-                    <Typography gutterBottom variant="subtitle1">
-                      {doc.data().name}
-                    </Typography>
-                    <Typography gutterBottom variant="subtitle2">
-                      {doc.data().action}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography style={{ cursor: "pointer" }}>
-                      Remove
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subtitle1">
-                    {doc.data().level}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Paper>
-        ))}
-      </div>
+      <Card>
+        <CardHeader
+          action={
+            <IconButton>
+              <MoreVertIcon />
+            </IconButton>
+          }
+          title={this.props.data.name}
+          subheader={this.props.data.level}
+        />
+        <CardMedia image={this.props.data.actions[0].whatToPlay} />
+        <CardContent>
+          <Typography component="p">
+            {this.props.data.actions[0].textOrWav}
+          </Typography>
+        </CardContent>
+        {/* <CardActions className={classes.actions} disableActionSpacing>
+          <IconButton aria-label="Add to favorites">
+            <FavoriteIcon />
+          </IconButton>
+          <IconButton aria-label="Share">
+            <ShareIcon />
+          </IconButton>
+          <IconButton
+            className={classnames(classes.expand, {
+              [classes.expandOpen]: this.state.expanded
+            })}
+            onClick={this.handleExpandClick}
+            aria-expanded={this.state.expanded}
+            aria-label="Show more"
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+        </CardActions> */}
+      </Card>
     );
   }
 }

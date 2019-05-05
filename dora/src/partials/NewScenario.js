@@ -119,7 +119,10 @@ class NewScenario extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={8}>
-                <NewAction addAction={this.handleActionSubmit} />
+                <NewAction
+                  addAction={this.handleActionSubmit}
+                  ref_main={this.state.ref_main}
+                />
               </Grid>
             </Grid>
             <Grid
@@ -202,6 +205,7 @@ class NewScenario extends Component {
 
   handleSubmit(event) {
     this.state.ref_main.add(this.state.data);
+    this.props.addScenario(this.state.data);
     this.setState(state => ({
       added: !state.added,
       add_new: !state.add_new,

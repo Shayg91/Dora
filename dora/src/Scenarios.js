@@ -12,10 +12,21 @@ import {
   FormControl,
   Select,
   Input,
-  MenuItem
+  MenuItem,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Card,
+  CardContent,
+  Typography
 } from "@material-ui/core";
+
+import ChildCareIcon from "@material-ui/icons/ChildCare";
+import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
-import StarIcon from "@material-ui/icons/Star";
+
 import "./Scenarios.css";
 
 import Scenario from "./partials/Scenario";
@@ -27,24 +38,101 @@ class Scenarios extends Component {
 
     this.state = {
       scenarios: [],
-      actions: [],
       ref_main: firebase.firestore().collection("scenario"),
-      ref_secondary: firebase.firestore().collection("action"),
-      add_new: true,
+      add_new: false,
       added: false,
-      data: {
-        title: "",
-        level: 1,
-        actions: [],
-        affectPath: ""
-      }
+      selected_scenario: null
     };
 
     this.handleToggleClick = this.handleToggleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleScenarioSelected = this.handleScenarioSelected.bind(this);
     this.getAllScenarios();
-    this.getAllActions();
+  }
+
+  render() {
+    return (
+      <div>
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="stretch"
+          spacing={6}
+        >
+          <Grid item className="sidenav" md={2}>
+            <Button
+              color="secondary"
+              variant="contained"
+              className="add-btn"
+              onClick={this.handleToggleClick}
+            >
+              <AddIcon />
+              <Typography>Add New Scenario</Typography>
+            </Button>
+            <List component="nav">
+              {this.state.scenarios.map(doc => (
+                <ListItem
+                  button
+                  selected={this.state.selectedIndex === 0}
+                  onClick={event => this.handleScenarioSelected(doc)}
+                >
+                  <ListItemIcon>
+                    <ChildCareIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={doc.name} />
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+          <Grid item className="content">
+            <div>
+              {this.state.selected_scenario == null && !this.state.add_new ? (
+                "No Scenario Selected"
+              ) : !this.state.add_new ? (
+                <Scenario data={this.state.selected_scenario} />
+              ) : (
+                <NewScenario addScenario={this.handleSubmit} />
+              )}
+            </div>
+          </Grid>
+        </Grid>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right"
+          }}
+          open={this.state.added}
+          color="secondary"
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          message={<span id="message-id">Scenario Added Successfully!</span>}
+          scenario={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
+      </div>
+    );
+  }
+
+  handleScenarioSelected(doc) {
+    if (this.state.add_new) {
+      this.setState(state => ({
+        add_new: !state.add_new,
+        selected_scenario: doc
+      }));
+    } else {
+      this.setState(state => ({
+        selected_scenario: doc
+      }));
+    }
   }
 
   getAllScenarios() {
@@ -52,55 +140,11 @@ class Scenarios extends Component {
     this.state.ref_main.get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
         currentComponent.setState(state => ({
-          scenarios: [...state.scenarios, doc]
+          scenarios: [...state.scenarios, doc.data()]
         }));
       });
     });
   }
-
-  getAllActions() {
-    let currentComponent = this;
-    this.state.ref_secondary.get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-        currentComponent.setState(state => ({
-          actions: [...state.actions, doc]
-        }));
-      });
-    });
-  }
-
-  handleToggleClick() {
-    this.setState(state => ({
-      add_new: !state.add_new
-    }));
-  }
-
-  handleSubmit(event) {
-    this.state.ref_main.add(this.state.data);
-    this.setState(state => ({
-      added: !state.added,
-      add_new: !state.add_new,
-      data: {
-        title: "",
-        level: 1,
-        actions: "",
-        affectPath: ""
-      }
-    }));
-    event.preventDefault();
-  }
-
-  handleFieldChange = field => event => {
-    let data = { ...this.state.data };
-    data[field] = event.target.value;
-    this.setState({ data });
-  };
-
-  handleChange = event => {
-    this.setState({
-      data: { ...this.state.data, actions: event.target.value }
-    });
-  };
 
   handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -109,23 +153,26 @@ class Scenarios extends Component {
     this.setState({ added: false });
   };
 
-  handleChangeMultiple = event => {
-    const { options } = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    this.setState({
-      data: { ...this.state.data, scenarios: value }
-    });
-  };
+  handleToggleClick() {
+    this.setState(state => ({
+      add_new: !state.add_new,
+      selected_scenario: null
+    }));
+  }
 
-  render() {
-    return (
-      <div className="main">
-        <h3>Scenarios</h3>
+  handleSubmit = new_scenario => {
+    this.setState(state => ({
+      added: !state.added,
+      add_new: !state.add_new,
+      scenarios: [...state.scenarios, new_scenario]
+    }));
+    console.log("updated");
+  };
+}
+
+export default Scenarios;
+
+/* <h3>Scenarios</h3>
         <Grid
           container
           direction="column"
@@ -163,10 +210,4 @@ class Scenarios extends Component {
               <CloseIcon />
             </IconButton>
           ]}
-        />
-      </div>
-    );
-  }
-}
-
-export default Scenarios;
+        /> */
