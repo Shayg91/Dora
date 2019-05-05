@@ -24,7 +24,7 @@ class NewScenario extends Component {
     super(props);
 
     this.state = {
-      ref_main: firebase.firestore().collection("scenario"),
+      ref_main: firebase.firestore().collection("Scenarios"),
       data: {
         name: "",
         level: 1,

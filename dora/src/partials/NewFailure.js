@@ -27,7 +27,7 @@ class NewFailure extends Component {
         nextScenarioID: ""
       },
       scenarios: [],
-      scenarios_ref: firebase.firestore().collection("scenario")
+      scenarios_ref: firebase.firestore().collection("Scenarios")
     };
 
     this.getAllScenarios();

@@ -9,6 +9,17 @@ var config = {
   storageBucket: "dora-d8968.appspot.com",
   messagingSenderId: "319894956120"
 };
-firebase.initializeApp(config);
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDbWbpZi-Va0JXEK0j3sqNSjtXAfccKDIs",
+  authDomain: "solejr-comp-app.firebaseapp.com",
+  databaseURL: "https://solejr-comp-app.firebaseio.com",
+  projectId: "solejr-comp-app",
+  storageBucket: "solejr-comp-app.appspot.com",
+  messagingSenderId: "348793288479",
+  appId: "1:348793288479:web:36617b912814f782"
+};
+
+firebase.initializeApp(firebaseConfig);
 
 export default firebase;
