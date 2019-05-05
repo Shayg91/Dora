@@ -90,7 +90,7 @@ class Scenarios extends Component {
               {this.state.selected_scenario == null && !this.state.add_new ? (
                 "No Scenario Selected"
               ) : !this.state.add_new ? (
-                this.state.selected_scenario.name
+                <Scenario data={this.state.selected_scenario} />
               ) : (
                 <NewScenario addScenario={this.handleSubmit} />
               )}

@@ -77,21 +77,12 @@ function MainAppBar(props) {
                 <ListItemText primary="Scenarios" />
               </ListItem>
             </NavLink>
-            <NavLink to="/Actions">
-              <ListItem button key="Actions">
-                <ListItemIcon>
-                  <ClassIcon />
-                </ListItemIcon>
-                <ListItemText primary="Actions" />
-              </ListItem>
-            </NavLink>
           </List>
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Route path="/Lessons" component={Lessons} />
           <Route path="/Scenarios" component={Scenarios} />
-          <Route path="/Actions" component={Actions} />
         </main>
       </div>
     </HashRouter>
