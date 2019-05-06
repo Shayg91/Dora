@@ -6,11 +6,12 @@ import {
   CardMedia,
   CardHeader,
   CardContent,
-  CardActions,
+  Card,
   IconButton
 } from "../../node_modules/@material-ui/core";
 
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+
 import "./Lesson.css";
 
 class Lesson extends Component {
@@ -28,18 +29,15 @@ class Lesson extends Component {
             </IconButton>
           }
           title={this.props.data.title}
-          category={this.props.data.category}
-          badge={this.props.data.badge}
+          subheader={this.props.data.category}
         />
-        </Card>
-       /* <CardMedia image={this.props.data.scenarios[0].name} />
-        <CardContent>
-          <Typography component="p">
-            {this.props.data.scenarios[0].name}
-          </Typography>
-        </CardContent>
-      </Card> }*/
-      // <div>
+       <CardMedia image={this.props.data.scenarios[0].name} />
+       <CardContent>
+        <Typography component="p">
+          {this.props.data.scenarios[0].name}
+        </Typography>
+      </CardContent>
+      {// <div>
       //   {this.props.data.map(doc => (
       //     <Paper key={doc.id} className="paper">
       //       <Grid container spacing={16}>
@@ -75,6 +73,8 @@ class Lesson extends Component {
       //     </Paper>
       //   ))}
       // </div>
+      }
+      </Card>
     );
   }
 }
