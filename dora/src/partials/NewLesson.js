@@ -4,37 +4,51 @@ import {
   TextField,
   Button,
   Paper,
-  Snackbar,
-  IconButton,
   InputLabel,
   Chip,
   Grid,
   FormControl,
   Select,
   Input,
-  MenuItem
+  MenuItem,
+  Tooltip
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+
+import AddIcon from "@material-ui/icons/Add";
+import FileUploader from "react-firebase-file-uploader";
+
 import "../Lessons.css";
-import Lesson from "./Lesson";
+
 class NewLessons extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ref_main: firebase.firestore().collection("lesson"),
+      ref_main: firebase.firestore().collection("sole_jr_comp_app_lessons"),
+      scenarios_ref: firebase.firestore().collection("Scenarios"),
+      scenarios: [],
+      isUploading: false,
+      progress: 0,
       data: {
         title: "",
         category: "",
         badge: "",
         goals: "",
-        scenarios: [],
-        affectPath: ""
+        scenariosInLesson: [],
+        id: -1
       }
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSubmitGoal = this.handleSubmitGoal.bind(this);
+
+    this.handleUploadStart = this.handleUploadStart.bind(this);
+    this.handleProgress = this.handleProgress.bind(this);
+    this.handleUploadError = this.handleUploadError.bind(this);
+    this.handleUploadSuccess = this.handleUploadSuccess.bind(this);
+
+    this.getAllScenarios();
   }
+
   render() {
     return (
       <Paper className="new-lesson-paper">
@@ -51,30 +65,31 @@ class NewLessons extends Component {
             justify="flex-start"
             alignItems="flex-end"
           >
-            <Grid item sm={6}>
+            <Grid item sm={8}>
               <TextField
                 id="title"
-                label="Insert lesson title"
+                label="Lesson Title"
                 fullWidth
                 value={this.state.data.title}
                 onChange={this.handleFieldChange("title")}
-                margin="normal"
               />
+            </Grid>
+            <Grid item sm={8}>
               <TextField
                 id="category"
-                label="Insert lesson category"
+                label="Category"
                 fullWidth
                 value={this.state.data.category}
                 onChange={this.handleFieldChange("category")}
-                margin="normal"
               />
+            </Grid>
+            <Grid item sm={8}>
               <TextField
                 id="goals"
-                label="Insert lesson goals"
+                label="Lesson Goals"
                 fullWidth
                 value={this.state.data.goals}
                 onChange={this.handleFieldChange("goals")}
-                margin="normal"
               />
               <Button
                 color="secondary"
@@ -83,19 +98,37 @@ class NewLessons extends Component {
               >
                 Add Goal
               </Button>
-              <br />
-              <label>Insert lesson badge: </label> <br />
-              <input
-                type="file"
-                accept={("image/jpeg", "image/png", "video/mp4")}
-              />
+            </Grid>
+            <Grid item sm={8}>
+              <div>
+                <FileUploader
+                  hidden
+                  id="raised-button-file"
+                  accept="image/*"
+                  randomizeFilename
+                  storageRef={firebase.storage().ref("badges")}
+                  onUploadStart={this.handleUploadStart}
+                  onUploadError={this.handleUploadError}
+                  onUploadSuccess={this.handleUploadSuccess}
+                  onProgress={this.handleProgress}
+                />
+                <label htmlFor="raised-button-file">
+                  <Tooltip title="Add Badge" placement="top">
+                    <Button component="span">
+                      <AddIcon color="secondary" />
+                    </Button>
+                  </Tooltip>
+                </label>
+              </div>
+            </Grid>
+            <Grid item sm={8}>
               <FormControl fullWidth>
                 <InputLabel htmlFor="select-multiple-chip">
-                  Select Scenarios for this lesson:
+                  Select Scenarios for this Lesson:
                 </InputLabel>
                 <Select
                   multiple
-                  value={this.state.data.scenarios}
+                  value={this.state.data.scenariosInLesson}
                   onChange={this.handleChange}
                   input={<Input id="select-multiple-chip" />}
                   renderValue={selected => (
@@ -106,29 +139,29 @@ class NewLessons extends Component {
                     </div>
                   )}
                 >
-                  {this.state.data.scenarios.map(doc => (
+                  {this.state.scenarios.map(doc => (
                     <MenuItem key={doc.id} value={doc.data().name}>
                       {doc.data().name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="flex-end"
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="flex-end"
+          >
+            <Grid item>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={this.handleSubmit}
               >
-                <Grid item>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={this.handleSubmit}
-                  >
-                    Save Lesson
-                  </Button>
-                </Grid>
-              </Grid>
+                Save Lesson
+              </Button>
             </Grid>
           </Grid>
         </Grid>
@@ -147,8 +180,8 @@ class NewLessons extends Component {
         category: "",
         badge: "",
         goals: "",
-        scenarios: [],
-        affectPath: ""
+        scenariosInLesson: [],
+        id: -1
       }
     }));
     event.preventDefault();
@@ -163,5 +196,39 @@ class NewLessons extends Component {
     data[field] = event.target.value;
     this.setState({ data });
   };
+
+  handleUploadStart = () => this.setState({ isUploading: true, progress: 0 });
+
+  handleProgress = progress => this.setState({ progress });
+
+  handleUploadError = error => {
+    this.setState({ isUploading: false });
+    console.error(error);
+  };
+
+  handleUploadSuccess = filename => {
+    this.setState({
+      data: { badge: filename },
+      progress: 100,
+      isUploading: false
+    });
+    firebase
+      .storage()
+      .ref("badges")
+      .child(filename)
+      .getDownloadURL()
+      .then(url => this.setState({ data: { badge: url } }));
+  };
+
+  getAllScenarios() {
+    let currentComponent = this;
+    this.state.scenarios_ref.get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        currentComponent.setState(state => ({
+          scenarios: [...state.scenarios, doc]
+        }));
+      });
+    });
+  }
 }
 export default NewLessons;

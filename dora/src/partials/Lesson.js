@@ -30,10 +30,10 @@ class Lesson extends Component {
           title={this.props.data.title}
           subheader={this.props.data.category}
         />
-        <CardMedia image={this.props.data.scenarios[0].name} />
+        <CardMedia image={this.props.data.scenariosInLesson[0]} />
         <CardContent>
           <Typography component="p">
-            {this.props.data.scenarios[0].name}
+            {this.props.data.scenariosInLesson[0]}
           </Typography>
         </CardContent>
         {
