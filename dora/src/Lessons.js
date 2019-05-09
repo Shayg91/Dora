@@ -26,8 +26,8 @@ class Lessons extends Component {
     this.state = {
       lessons: [],
       scenarios: [],
-      ref_main: firebase.firestore().collection("lesson"),
-      ref_secondary: firebase.firestore().collection("scenario"),
+      ref_main: firebase.firestore().collection("sole_jr_comp_app_lessons"),
+      ref_secondary: firebase.firestore().collection("Scenarios"),
       add_new: true,
       added: false,
       data: {
@@ -117,7 +117,6 @@ class Lessons extends Component {
       data: { ...this.state.data, scenarios: event.target.value }
     });
   };
-
 
   render() {
     return (

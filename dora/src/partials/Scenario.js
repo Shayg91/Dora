@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import {
   Typography,
-  ButtonBase,
   Card,
   CardMedia,
   CardHeader,
   CardContent,
-  CardActions,
-  IconButton
+  IconButton,
+  Menu,
+  MenuItem
 } from "../../node_modules/@material-ui/core";
 
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -17,6 +17,10 @@ import "./Scenario.css";
 class Scenario extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      anchorEl: null
+    };
   }
 
   render() {
@@ -25,39 +29,47 @@ class Scenario extends Component {
         <CardHeader
           action={
             <IconButton>
-              <MoreVertIcon />
+              <MoreVertIcon onClick={this.handleClick} />
             </IconButton>
           }
           title={this.props.data.name}
           subheader={this.props.data.level}
         />
+        <Menu
+          id="simple-menu"
+          anchorEl={this.state.anchorEl}
+          open={Boolean(this.state.anchorEl)}
+          onClose={this.handleClose}
+        >
+          <MenuItem onClick={this.handleEdit}>Edit</MenuItem>
+          <MenuItem onClick={this.handleDelete}>Delete</MenuItem>
+        </Menu>
         <CardMedia image={this.props.data.actions[0].whatToPlay} />
         <CardContent>
           <Typography component="p">
-            {this.props.data.actions[0].textOrWav}
+            Question: {this.props.data.actions[0].textOrWav}
+          </Typography>
+          <img src={this.props.data.actions[0].whatToPlay} />
+          <Typography component="p">
+            Answer: {this.props.data.waitFor.expectedAnswer.input}
           </Typography>
         </CardContent>
-        {/* <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
-          </IconButton>
-          <IconButton
-            className={classnames(classes.expand, {
-              [classes.expandOpen]: this.state.expanded
-            })}
-            onClick={this.handleExpandClick}
-            aria-expanded={this.state.expanded}
-            aria-label="Show more"
-          >
-            <ExpandMoreIcon />
-          </IconButton>
-        </CardActions> */}
       </Card>
     );
   }
+
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleDelete = event => {
+    // TODO: create a delete method
+    console.log("deleted");
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
 }
 
 export default Scenario;

@@ -79,6 +79,8 @@ class NewAction extends Component {
             <Grid item>
               <div>
                 <FileUploader
+                  hidden
+                  id="raised-button-file"
                   accept="image/*"
                   randomizeFilename
                   storageRef={firebase.storage().ref("images")}
@@ -95,13 +97,13 @@ class NewAction extends Component {
                   onChange={this.handleFieldChange("whatToPlay")}
                 /> */}
 
-                {/* <label htmlFor="raised-button-file">
+                <label htmlFor="raised-button-file">
                   <Tooltip title="Add Picture" placement="top">
                     <Button component="span">
                       <AddIcon color="secondary" />
                     </Button>
                   </Tooltip>
-                </label> */}
+                </label>
               </div>
             </Grid>
             <Grid
@@ -178,7 +180,7 @@ class NewAction extends Component {
       .ref("images")
       .child(filename)
       .getDownloadURL()
-      .then(url => this.setState({ avatarURL: url }));
+      .then(url => this.setState({ data: { whatToPlay: url } }));
   };
 }
 

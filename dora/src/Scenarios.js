@@ -38,7 +38,7 @@ class Scenarios extends Component {
 
     this.state = {
       scenarios: [],
-      ref_main: firebase.firestore().collection("scenario"),
+      ref_main: firebase.firestore().collection("Scenarios"),
       add_new: false,
       added: false,
       selected_scenario: null

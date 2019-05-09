@@ -24,7 +24,7 @@ class NewScenario extends Component {
     super(props);
 
     this.state = {
-      ref_main: firebase.firestore().collection("scenario"),
+      ref_main: firebase.firestore().collection("Scenarios"),
       data: {
         name: "",
         level: 1,
@@ -240,7 +240,8 @@ class NewScenario extends Component {
   }
 
   handleActionSubmit = action => {
-    let actionsList = [...this.state.data.actions];
+    //let actionsList = [...this.state.data.actions];
+    let actionsList = [];
     actionsList.push(action);
     this.setState({
       data: { ...this.state.data, actions: actionsList }
