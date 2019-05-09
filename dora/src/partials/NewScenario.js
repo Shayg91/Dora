@@ -240,7 +240,8 @@ class NewScenario extends Component {
   }
 
   handleActionSubmit = action => {
-    let actionsList = [...this.state.data.actions];
+    //let actionsList = [...this.state.data.actions];
+    let actionsList = [];
     actionsList.push(action);
     this.setState({
       data: { ...this.state.data, actions: actionsList }
