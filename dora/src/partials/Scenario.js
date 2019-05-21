@@ -50,9 +50,16 @@ class Scenario extends Component {
             Question: {this.props.data.actions[0].textOrWav}
           </Typography>
           <img src={this.props.data.actions[0].whatToPlay} />
-          <Typography component="p">
-            Answer: {this.props.data.waitFor.expectedAnswer.input}
-          </Typography>
+          {this.props.data.waitFor.typeOfInput != "mulChoice" ? (
+            <Typography component="p">
+              Answer: {this.props.data.waitFor.expectedAnswer.input}
+            </Typography>
+          ) : (
+            <Typography component="p">
+              Correct Answer:
+              {this.props.data.waitFor.expectedAnswer.input.split(",")[0]}
+            </Typography>
+          )}
         </CardContent>
       </Card>
     );

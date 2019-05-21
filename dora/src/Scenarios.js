@@ -128,10 +128,13 @@ class Scenarios extends Component {
         add_new: !state.add_new,
         selected_scenario: doc
       }));
+      console.log(doc);
     } else {
       this.setState(state => ({
         selected_scenario: doc
       }));
+
+      console.log(doc);
     }
   }
 
