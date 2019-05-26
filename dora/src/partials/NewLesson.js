@@ -17,6 +17,8 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import FileUploader from "react-firebase-file-uploader";
 
+import GoalsList from "./GoalsList";
+
 import "../Lessons.css";
 
 class NewLessons extends Component {
@@ -32,10 +34,11 @@ class NewLessons extends Component {
         title: "",
         category: "",
         badge: "",
-        goals: "",
+        goals: [],
         scenariosInLesson: [],
         id: -1
-      }
+      },
+      goalToAdd: ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
@@ -84,12 +87,13 @@ class NewLessons extends Component {
               />
             </Grid>
             <Grid item sm={8}>
+              <GoalsList goals={this.state.data.goals} />
               <TextField
                 id="goals"
                 label="Lesson Goals"
                 fullWidth
-                value={this.state.data.goals}
-                onChange={this.handleFieldChange("goals")}
+                value={this.state.goalToAdd}
+                onChange={this.handleGoalChanged("goalToAdd")}
               />
               <Button
                 color="secondary"
@@ -124,7 +128,7 @@ class NewLessons extends Component {
             <Grid item sm={8}>
               <FormControl fullWidth>
                 <InputLabel htmlFor="select-multiple-chip">
-                  Select Scenarios for this Lesson:
+                  Select Scenarios for this lesson:
                 </InputLabel>
                 <Select
                   multiple
@@ -186,11 +190,19 @@ class NewLessons extends Component {
     }));
     event.preventDefault();
   }
-  handleSubmitGoal = () => {
+
+  handleSubmitGoal = goal => {
+    let goalsList = [...this.state.data.goals];
+    goalsList.push(goal);
     this.setState({
-      goals: this.state.goals.concat("goals")
+      data: { ...this.state.data, goals: goalsList }
     });
   };
+
+  handleGoalChanged = field => event => {
+    this.setState({ goalToAdd: event.target.value });
+  };
+
   handleFieldChange = field => event => {
     let data = { ...this.state.data };
     data[field] = event.target.value;

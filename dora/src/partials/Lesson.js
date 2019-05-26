@@ -13,6 +13,11 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import "./Lesson.css";
 
+var imgStyle = {
+  height: "300px"
+  // paddingTop: "25%" // 16:9
+};
+
 class Lesson extends Component {
   constructor(props) {
     super(props);
@@ -30,50 +35,25 @@ class Lesson extends Component {
           title={this.props.data.title}
           subheader={this.props.data.category}
         />
-        <CardMedia image={this.props.data.scenariosInLesson[0]} />
+        <CardMedia style={imgStyle} image={this.props.data.badge} />
         <CardContent>
           <Typography component="p">
-            {this.props.data.scenariosInLesson[0]}
+            Goals:
+            <ol>
+              {this.props.data.goals.map(listItem => (
+                <li>{listItem}</li>
+              ))}
+            </ol>
+          </Typography>
+          <Typography component="p">
+            Scenarios in Lesson:
+            <ol>
+              {this.props.data.scenariosInLesson.map(listItem => (
+                <li>{listItem}</li>
+              ))}
+            </ol>
           </Typography>
         </CardContent>
-        {
-          // <div>
-          //   {this.props.data.map(doc => (
-          //     <Paper key={doc.id} className="paper">
-          //       <Grid container spacing={16}>
-          //         <Grid item>
-          //           <ButtonBase className="image">
-          //             <img
-          //               className="img"
-          //               alt="complex"
-          //               src={doc.data().affectPath}
-          //             />
-          //           </ButtonBase>
-          //         </Grid>
-          //         <Grid item xs={6} sm container>
-          //           <Grid item xs container direction="column" spacing={16}>
-          //             <Grid item xs>
-          //               <Typography gutterBottom variant="subtitle1">
-          //                 {doc.data().title}
-          //               </Typography>
-          //             </Grid>
-          //             <Grid item>
-          //               <Typography style={{ cursor: "pointer" }}>
-          //                 Remove
-          //               </Typography>
-          //             </Grid>
-          //           </Grid>
-          //           <Grid item>
-          //             <Typography variant="subtitle1">
-          //               {doc.data().level}
-          //             </Typography>
-          //           </Grid>
-          //         </Grid>
-          //       </Grid>
-          //     </Paper>
-          //   ))}
-          // </div>
-        }
       </Card>
     );
   }
