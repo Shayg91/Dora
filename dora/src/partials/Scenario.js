@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import firebase from "../scripts/Dora";
 import {
   Typography,
   Card,
@@ -69,9 +70,59 @@ class Scenario extends Component {
     this.setState({ anchorEl: event.currentTarget });
   };
 
+  /* How this function should work:
+  - Get the ID of the scenario that we whant to delete
+  - Check if any lesson containes the scenario as a starting scenario. 
+    If connected - show message.
+  - Check if any scenario uses the scenario as next scenario.
+    If connected - show message.
+  - If nothing is connected - delete scenario.   
+  */
   handleDelete = event => {
-    // TODO: create a delete method
+    let scenarioToDelete = this.props.data.name;
+
+    let continuingScenario = [];
     console.log("deleted");
+  };
+
+  isConnectedToLessons = name => {
+    let lessonsWithScenario = [];
+    firebase
+      .firestore()
+      .collection("sole_jr_comp_app_lessons")
+      .where("scenariosInLesson", "array-contains", name)
+      .get()
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          lessonsWithScenario = [...lessonsWithScenario, doc];
+        });
+
+        if (lessonsWithScenario.length > 0) {
+          return false;
+        }
+
+        return true;
+      });
+  };
+
+  isConnectedToScenarios = name => {
+    let connectedScenarios = [];
+    firebase
+      .firestore()
+      .collection("Scenarios")
+      .where("onfailure/nextScenarioID", "==", name)
+      .get()
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          connectedScenarios = [...connectedScenarios, doc];
+        });
+
+        if (connectedScenarios.length > 0) {
+          return false;
+        }
+
+        return true;
+      });
   };
 
   handleClose = () => {
