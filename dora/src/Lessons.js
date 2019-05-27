@@ -55,7 +55,7 @@ class Lessons extends Component {
     this.state.ref_main.get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
         currentComponent.setState(state => ({
-          lessons: [...state.lessons, doc]
+          lessons: [...state.lessons, { key: doc.id, value: doc.data() }]
         }));
       });
     });
@@ -65,15 +65,16 @@ class Lessons extends Component {
     if (this.state.add_new) {
       this.setState(state => ({
         add_new: !state.add_new,
-        selected_lesson: doc.data()
+        selected_lesson: doc
       }));
     } else {
       this.setState(state => ({
-        selected_lesson: doc.data()
+        selected_lesson: doc
       }));
     }
   }
 
+  // TODO: Change this function to work
   handleSubmit = new_scenario => {
     this.setState(state => ({
       added: !state.added,
@@ -119,6 +120,7 @@ class Lessons extends Component {
             <List component="nav">
               {this.state.lessons.map(doc => (
                 <ListItem
+                  key={doc.key}
                   button
                   selected={this.state.selectedIndex === 0}
                   onClick={event => this.handleLessonSelected(doc)}
@@ -126,7 +128,7 @@ class Lessons extends Component {
                   <ListItemIcon>
                     <ChildCareIcon />
                   </ListItemIcon>
-                  <ListItemText primary={doc.data().title} />
+                  <ListItemText primary={doc.value.title} />
                 </ListItem>
               ))}
             </List>
@@ -136,7 +138,10 @@ class Lessons extends Component {
               {this.state.selected_lesson == null && !this.state.add_new ? (
                 "No Lesson Selected"
               ) : !this.state.add_new ? (
-                <Lesson data={this.state.selected_lesson} />
+                <Lesson
+                  data={this.state.selected_lesson}
+                  onDelete={this.deleteLesson}
+                />
               ) : (
                 <NewLesson addLesson={this.handleSubmit} />
               )}
@@ -167,6 +172,31 @@ class Lessons extends Component {
       </div>
     );
   }
+
+  deleteLesson = () => {
+    let lessons = this.state.lessons;
+    let palcement = 0;
+
+    while (palcement !== lessons.length) {
+      if (lessons[palcement].key === this.state.selected_lesson.key) {
+        break;
+      } else {
+        palcement++;
+      }
+    }
+
+    lessons.splice(palcement, 1);
+    this.setState(state => ({
+      selected_lesson: null
+    }));
+
+    this.setState(state => ({
+      lessons: lessons
+    }));
+    console.log("deleted");
+  };
+
+  deleteLesson;
 }
 
 export default Lessons;

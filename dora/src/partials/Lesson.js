@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import firebase from "../scripts/Dora";
 import {
   Typography,
   ButtonBase,
@@ -6,7 +7,9 @@ import {
   CardMedia,
   CardHeader,
   CardContent,
-  IconButton
+  IconButton,
+  Menu,
+  MenuItem
 } from "../../node_modules/@material-ui/core";
 
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -21,26 +24,41 @@ var imgStyle = {
 class Lesson extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      anchorEl: null
+    };
+
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   render() {
     return (
       <Card>
         <CardHeader
-          scenario={
+          action={
             <IconButton>
-              <MoreVertIcon />
+              <MoreVertIcon onClick={this.handleClick} />
             </IconButton>
           }
           title={this.props.data.title}
           subheader={this.props.data.category}
         />
-        <CardMedia style={imgStyle} image={this.props.data.badge} />
+        <Menu
+          id="simple-menu"
+          anchorEl={this.state.anchorEl}
+          open={Boolean(this.state.anchorEl)}
+          onClose={this.handleClose}
+        >
+          <MenuItem onClick={this.handleEdit}>Edit</MenuItem>
+          <MenuItem onClick={this.handleDelete}>Delete</MenuItem>
+        </Menu>
+        <CardMedia style={imgStyle} image={this.props.data.value.badge} />
         <CardContent>
           <Typography component="p">
             Goals:
             <ol>
-              {this.props.data.goals.map(listItem => (
+              {this.props.data.value.goals.map(listItem => (
                 <li>{listItem}</li>
               ))}
             </ol>
@@ -48,7 +66,7 @@ class Lesson extends Component {
           <Typography component="p">
             Scenarios in Lesson:
             <ol>
-              {this.props.data.scenariosInLesson.map(listItem => (
+              {this.props.data.value.scenariosInLesson.map(listItem => (
                 <li>{listItem}</li>
               ))}
             </ol>
@@ -57,6 +75,31 @@ class Lesson extends Component {
       </Card>
     );
   }
+
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleDelete = () => {
+    console.log(this.props.data.key);
+    let that = this;
+    firebase
+      .firestore()
+      .collection("sole_jr_comp_app_lessons")
+      .doc(this.props.data.key)
+      .delete()
+      .then(function() {
+        console.log("Document successfully deleted!");
+        that.props.onDelete();
+      })
+      .catch(function(error) {
+        console.error("Error removing document: ", error);
+      });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
 }
 
 export default Lesson;
