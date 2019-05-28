@@ -41,12 +41,14 @@ class Scenarios extends Component {
       ref_main: firebase.firestore().collection("Scenarios"),
       add_new: false,
       added: false,
+      editMode: false,
       selected_scenario: null
     };
 
     this.handleToggleClick = this.handleToggleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleScenarioSelected = this.handleScenarioSelected.bind(this);
+    this.handleScenarioEdit = this.handleScenarioEdit.bind(this);
     this.getAllScenarios();
   }
 
@@ -88,12 +90,27 @@ class Scenarios extends Component {
           </Grid>
           <Grid item className="content">
             <div>
-              {this.state.selected_scenario == null && !this.state.add_new ? (
+              {// If no scenario was selected and not currently creating a new scenario and not in edit Mode
+              this.state.selected_scenario == null &&
+              !this.state.add_new &&
+              !this.state.editMode ? (
                 "No Scenario Selected"
-              ) : !this.state.add_new ? (
-                <Scenario data={this.state.selected_scenario} />
+              ) : // If not creating a new scenario and not in edit mode
+              !this.state.add_new && !this.state.editMode ? (
+                <Scenario
+                  data={this.state.selected_scenario}
+                  handleEdit={this.handleScenarioEdit}
+                />
+              ) : this.state.editMode ? (
+                // Editing Scenario
+                <NewScenario
+                  addScenario={this.handleUpdate}
+                  editMode={true}
+                  data={this.state.selected_scenario}
+                />
               ) : (
-                <NewScenario addScenario={this.handleSubmit} />
+                // Creating a new scenario
+                <NewScenario addScenario={this.handleSubmit} editMode={false} />
               )}
             </div>
           </Grid>
@@ -171,6 +188,30 @@ class Scenarios extends Component {
       scenarios: [...state.scenarios, { key: key, value: new_scenario }]
     }));
     console.log("updated");
+  };
+
+  handleScenarioEdit = () => {
+    this.setState(state => ({
+      editMode: true
+    }));
+  };
+
+  handleUpdate = data => {
+    let position;
+    let updated_scenarios = this.state.scenarios;
+    for (let i = 0; i < this.state.scenarios.length; i++) {
+      if (this.state.scenarios[i].key === this.state.selected_scenario.key) {
+        position = i;
+        break;
+      }
+    }
+
+    updated_scenarios[position].value = data;
+
+    this.setState(state => ({
+      scenarios: updated_scenarios,
+      editMode: false
+    }));
   };
 }
 

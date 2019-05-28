@@ -24,6 +24,21 @@ class NewAction extends Component {
       }
     };
 
+    if (this.props.editMode) {
+      this.state.data = this.props.data;
+
+      if (this.state.data.typeOfInput === "mulChoice") {
+        const mulChoiceAnswers = this.state.data.expectedAnswer.input.split(
+          ","
+        );
+
+        this.state.mulChoice.correct = mulChoiceAnswers[0];
+        this.state.mulChoice.wrong1 = mulChoiceAnswers[1];
+        this.state.mulChoice.wrong2 = mulChoiceAnswers[2];
+        this.state.mulChoice.wrong3 = mulChoiceAnswers[3];
+      }
+    }
+
     this.handleFieldChange = this.handleFieldChange.bind(this);
   }
 

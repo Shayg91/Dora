@@ -21,11 +21,15 @@ class NewAction extends Component {
       isUploading: false,
       progress: 0,
       data: {
-        effect: "happyFace",
-        textOrWAV: "",
+        effect: "Smile",
+        textOrWav: "",
         whatToPlay: ""
       }
     };
+
+    if (this.props.editMode) {
+      this.state.data = this.props.data;
+    }
 
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleUploadStart = this.handleUploadStart.bind(this);
@@ -58,8 +62,8 @@ class NewAction extends Component {
                 fullWidth
                 multiline
                 label="What to Say"
-                value={this.state.data.textOrWAV}
-                onChange={this.handleFieldChange("textOrWAV")}
+                value={this.state.data.textOrWav}
+                onChange={this.handleFieldChange("textOrWav")}
                 onBlur={this.handleSubmit}
               />
             </Grid>
@@ -122,7 +126,7 @@ class NewAction extends Component {
                   onChange={this.handleFieldChange("effect")}
                   onBlur={this.handleSubmit}
                 >
-                  <MenuItem key="1" value="happyFace">
+                  <MenuItem key="1" value="Smile">
                     😊 - Happy Face
                   </MenuItem>
                   <MenuItem key="2" value="sadFace">
