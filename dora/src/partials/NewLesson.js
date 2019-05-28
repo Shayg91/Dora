@@ -35,14 +35,14 @@ class NewLessons extends Component {
         category: "",
         badge: "",
         goals: [],
-        scenariosInLesson: [],
-        id: -1
+        scenariosInLesson: []
       },
       goalToAdd: ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSubmitGoal = this.handleSubmitGoal.bind(this);
+    this.removeGoal = this.removeGoal.bind(this);
 
     this.handleUploadStart = this.handleUploadStart.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
@@ -87,7 +87,10 @@ class NewLessons extends Component {
               />
             </Grid>
             <Grid item sm={8}>
-              <GoalsList goals={this.state.data.goals} />
+              <GoalsList
+                goals={this.state.data.goals}
+                removeGoal={this.removeGoal}
+              />
               <TextField
                 id="goals"
                 label="Lesson Goals"
@@ -183,19 +186,19 @@ class NewLessons extends Component {
         title: "",
         category: "",
         badge: "",
-        goals: "",
-        scenariosInLesson: [],
-        id: -1
+        goals: [],
+        scenariosInLesson: []
       }
     }));
     event.preventDefault();
   }
 
-  handleSubmitGoal = goal => {
+  handleSubmitGoal = event => {
     let goalsList = [...this.state.data.goals];
-    goalsList.push(goal);
+    goalsList.push(this.state.goalToAdd);
     this.setState({
-      data: { ...this.state.data, goals: goalsList }
+      data: { ...this.state.data, goals: goalsList },
+      goalToAdd: ""
     });
   };
 
@@ -242,5 +245,14 @@ class NewLessons extends Component {
       });
     });
   }
+
+  removeGoal = goal_index => {
+    console.log("imhere", goal_index);
+    let goalsList = this.state.data.goals;
+
+    this.setState({
+      data: { ...this.state.data, goals: goalsList.splice(goal_index + 1, 1) }
+    });
+  };
 }
 export default NewLessons;
