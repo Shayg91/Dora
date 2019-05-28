@@ -73,6 +73,7 @@ class Scenarios extends Component {
             <List component="nav">
               {this.state.scenarios.map(doc => (
                 <ListItem
+                  key={doc.key}
                   button
                   selected={this.state.selectedIndex === 0}
                   onClick={event => this.handleScenarioSelected(doc)}
@@ -80,7 +81,7 @@ class Scenarios extends Component {
                   <ListItemIcon>
                     <ChildCareIcon />
                   </ListItemIcon>
-                  <ListItemText primary={doc.name} />
+                  <ListItemText primary={doc.value.name} />
                 </ListItem>
               ))}
             </List>
@@ -143,7 +144,7 @@ class Scenarios extends Component {
     this.state.ref_main.get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
         currentComponent.setState(state => ({
-          scenarios: [...state.scenarios, doc.data()]
+          scenarios: [...state.scenarios, { key: doc.id, value: doc.data() }]
         }));
       });
     });
@@ -163,54 +164,14 @@ class Scenarios extends Component {
     }));
   }
 
-  handleSubmit = new_scenario => {
+  handleSubmit = (key, new_scenario) => {
     this.setState(state => ({
       added: !state.added,
       add_new: !state.add_new,
-      scenarios: [...state.scenarios, new_scenario]
+      scenarios: [...state.scenarios, { key: key, value: new_scenario }]
     }));
     console.log("updated");
   };
 }
 
 export default Scenarios;
-
-/* <h3>Scenarios</h3>
-        <Grid
-          container
-          direction="column"
-          justify="space-around"
-          alignItems="stretch"
-        >
-          {!this.state.add_new ? <NewScenario /> : null}
-          <Button
-            variant="contained"
-            className="add-new-btn"
-            color="secondary"
-            onClick={this.handleToggleClick}
-          >
-            {this.state.add_new ? "Add New Scenario" : "Close"}
-          </Button>
-          <Scenario data={this.state.scenarios} />
-        </Grid>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right"
-          }}
-          open={this.state.added}
-          color="secondary"
-          autoHideDuration={6000}
-          onClose={this.handleClose}
-          message={<span id="message-id">Scenario Added Successfully!</span>}
-          scenario={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={this.handleClose}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
-        /> */
