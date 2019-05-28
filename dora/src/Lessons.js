@@ -50,53 +50,6 @@ class Lessons extends Component {
     this.getAllLessons();
   }
 
-  getAllLessons() {
-    let currentComponent = this;
-    this.state.ref_main.get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-        currentComponent.setState(state => ({
-          lessons: [...state.lessons, { key: doc.id, value: doc.data() }]
-        }));
-      });
-    });
-  }
-
-  handleLessonSelected(doc) {
-    if (this.state.add_new) {
-      this.setState(state => ({
-        add_new: !state.add_new,
-        selected_lesson: doc
-      }));
-    } else {
-      this.setState(state => ({
-        selected_lesson: doc
-      }));
-    }
-  }
-
-  // TODO: Change this function to work
-  handleSubmit = new_scenario => {
-    this.setState(state => ({
-      added: !state.added,
-      add_new: !state.add_new,
-      scenarios: [...state.scenarios, new_scenario]
-    }));
-    console.log("updated");
-  };
-
-  handleToggleClick() {
-    this.setState(state => ({
-      add_new: !state.add_new
-    }));
-  }
-
-  handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    this.setState({ added: false });
-  };
-
   render() {
     return (
       <div>
@@ -172,6 +125,51 @@ class Lessons extends Component {
       </div>
     );
   }
+  getAllLessons() {
+    let currentComponent = this;
+    this.state.ref_main.get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        currentComponent.setState(state => ({
+          lessons: [...state.lessons, { key: doc.id, value: doc.data() }]
+        }));
+      });
+    });
+  }
+
+  handleLessonSelected(doc) {
+    if (this.state.add_new) {
+      this.setState(state => ({
+        add_new: !state.add_new,
+        selected_lesson: doc
+      }));
+    } else {
+      this.setState(state => ({
+        selected_lesson: doc
+      }));
+    }
+  }
+
+  handleSubmit = (key, new_scenario) => {
+    this.setState(state => ({
+      added: !state.added,
+      add_new: !state.add_new,
+      lessons: [...state.lessons, { key: key, value: new_scenario }]
+    }));
+    console.log("updated");
+  };
+
+  handleToggleClick() {
+    this.setState(state => ({
+      add_new: !state.add_new
+    }));
+  }
+
+  handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ added: false });
+  };
 
   deleteLesson = () => {
     let lessons = this.state.lessons;
@@ -195,8 +193,6 @@ class Lessons extends Component {
     }));
     console.log("deleted");
   };
-
-  deleteLesson;
 }
 
 export default Lessons;

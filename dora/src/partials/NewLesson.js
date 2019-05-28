@@ -43,6 +43,7 @@ class NewLessons extends Component {
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSubmitGoal = this.handleSubmitGoal.bind(this);
     this.removeGoal = this.removeGoal.bind(this);
+    this.handleChange = this.handleChange.bind(this);
 
     this.handleUploadStart = this.handleUploadStart.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
@@ -68,7 +69,7 @@ class NewLessons extends Component {
             justify="flex-start"
             alignItems="flex-end"
           >
-            <Grid item sm={8}>
+            <Grid item sm={10}>
               <TextField
                 id="title"
                 label="Lesson Title"
@@ -77,7 +78,7 @@ class NewLessons extends Component {
                 onChange={this.handleFieldChange("title")}
               />
             </Grid>
-            <Grid item sm={8}>
+            <Grid item sm={10}>
               <TextField
                 id="category"
                 label="Category"
@@ -86,27 +87,57 @@ class NewLessons extends Component {
                 onChange={this.handleFieldChange("category")}
               />
             </Grid>
-            <Grid item sm={8}>
-              <GoalsList
-                goals={this.state.data.goals}
-                removeGoal={this.removeGoal}
-              />
-              <TextField
-                id="goals"
-                label="Lesson Goals"
-                fullWidth
-                value={this.state.goalToAdd}
-                onChange={this.handleGoalChanged("goalToAdd")}
-              />
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={this.handleSubmitGoal}
+            <Grid
+              direction="row"
+              container
+              justify="flex-start"
+              alignItems="flex-end"
+            >
+              <Grid item sm={8}>
+                <GoalsList
+                  goals={this.state.data.goals}
+                  removeGoal={this.removeGoal}
+                />
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="center"
               >
-                Add Goal
-              </Button>
+                <Grid item sm={8}>
+                  <TextField
+                    id="goals"
+                    label="Lesson Goals"
+                    fullWidth
+                    value={this.state.goalToAdd}
+                    onChange={this.handleGoalChanged("goalToAdd")}
+                  />
+                </Grid>
+                <Grid item sm={2}>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={this.handleSubmitGoal}
+                  >
+                    Add Goal
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item sm={8}>
+            <Grid item xs={8}>
+              <TextField
+                disabled
+                id="badge"
+                className="action-label"
+                multiline
+                fullWidth
+                label="Lesson Badge"
+                value={this.state.data.badge}
+                onChange={this.handleFieldChange("badge")}
+              />
+            </Grid>
+            <Grid item>
               <div>
                 <FileUploader
                   hidden
@@ -129,22 +160,15 @@ class NewLessons extends Component {
               </div>
             </Grid>
             <Grid item sm={8}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="select-multiple-chip">
-                  Select Scenarios for this lesson:
+              <FormControl>
+                <InputLabel htmlFor="select-multiple">
+                  Scenarios in Lesson
                 </InputLabel>
                 <Select
                   multiple
                   value={this.state.data.scenariosInLesson}
                   onChange={this.handleChange}
-                  input={<Input id="select-multiple-chip" />}
-                  renderValue={selected => (
-                    <div>
-                      {selected.map(value => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </div>
-                  )}
+                  input={<Input id="select-multiple" />}
                 >
                   {this.state.scenarios.map(doc => (
                     <MenuItem key={doc.id} value={doc.data().name}>
@@ -177,19 +201,21 @@ class NewLessons extends Component {
   }
 
   handleSubmit(event) {
-    this.state.ref_main.add(this.state.data);
-    this.props.addLesson(this.state.data);
-    this.setState(state => ({
-      added: !state.added,
-      add_new: !state.add_new,
-      data: {
-        title: "",
-        category: "",
-        badge: "",
-        goals: [],
-        scenariosInLesson: []
-      }
-    }));
+    let that = this;
+    this.state.ref_main.add(this.state.data).then(function(docRef) {
+      that.props.addLesson(docRef.id, that.state.data);
+      that.setState(state => ({
+        added: !state.added,
+        add_new: !state.add_new,
+        data: {
+          title: "",
+          category: "",
+          badge: "",
+          goals: [],
+          scenariosInLesson: []
+        }
+      }));
+    });
     event.preventDefault();
   }
 
@@ -254,5 +280,14 @@ class NewLessons extends Component {
       data: { ...this.state.data, goals: goalsList.splice(goal_index + 1, 1) }
     });
   };
+
+  handleChange(event) {
+    let data = this.state.data;
+    data.scenariosInLesson = event.target.value;
+
+    this.setState(state => ({
+      data: data
+    }));
+  }
 }
 export default NewLessons;
