@@ -15,6 +15,11 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import "./Scenario.css";
 
+var imgStyle = {
+  height: "300px"
+  // paddingTop: "25%" // 16:9
+};
+
 class Scenario extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +27,13 @@ class Scenario extends Component {
     this.state = {
       anchorEl: null
     };
+
+    this.handleClick = this.handleClick.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.isConnectedToLessons = this.isConnectedToLessons.bind(this);
+    this.isConnectedToScenarios = this.isConnectedToScenarios.bind(this);
   }
 
   render() {
@@ -33,8 +45,8 @@ class Scenario extends Component {
               <MoreVertIcon onClick={this.handleClick} />
             </IconButton>
           }
-          title={this.props.data.name}
-          subheader={this.props.data.level}
+          title={this.props.data.value.name}
+          subheader={this.props.data.value.level}
         />
         <Menu
           id="simple-menu"
@@ -45,20 +57,22 @@ class Scenario extends Component {
           <MenuItem onClick={this.handleEdit}>Edit</MenuItem>
           <MenuItem onClick={this.handleDelete}>Delete</MenuItem>
         </Menu>
-        <CardMedia image={this.props.data.actions[0].whatToPlay} />
+        <CardMedia
+          style={imgStyle}
+          image={this.props.data.value.actions[0].whatToPlay}
+        />
         <CardContent>
           <Typography component="p">
-            Question: {this.props.data.actions[0].textOrWav}
+            Question: {this.props.data.value.actions[0].textOrWav}
           </Typography>
-          <img src={this.props.data.actions[0].whatToPlay} />
-          {this.props.data.waitFor.typeOfInput != "mulChoice" ? (
+          {this.props.data.value.waitFor.typeOfInput != "mulChoice" ? (
             <Typography component="p">
-              Answer: {this.props.data.waitFor.expectedAnswer.input}
+              Answer: {this.props.data.value.waitFor.expectedAnswer.input}
             </Typography>
           ) : (
             <Typography component="p">
               Correct Answer:
-              {this.props.data.waitFor.expectedAnswer.input.split(",")[0]}
+              {this.props.data.value.waitFor.expectedAnswer.input.split(",")[0]}
             </Typography>
           )}
         </CardContent>
@@ -71,7 +85,6 @@ class Scenario extends Component {
   };
 
   /* How this function should work:
-  - Get the ID of the scenario that we whant to delete
   - Check if any lesson containes the scenario as a starting scenario. 
     If connected - show message.
   - Check if any scenario uses the scenario as next scenario.
@@ -81,7 +94,6 @@ class Scenario extends Component {
   handleDelete = event => {
     let scenarioToDelete = this.props.data.name;
 
-    let continuingScenario = [];
     console.log("deleted");
   };
 
@@ -110,6 +122,7 @@ class Scenario extends Component {
     firebase
       .firestore()
       .collection("Scenarios")
+      .child()
       .where("onfailure/nextScenarioID", "==", name)
       .get()
       .then(function(querySnapshot) {
@@ -127,6 +140,10 @@ class Scenario extends Component {
 
   handleClose = () => {
     this.setState({ anchorEl: null });
+  };
+
+  handleEdit = () => {
+    this.props.handleEdit();
   };
 }
 
