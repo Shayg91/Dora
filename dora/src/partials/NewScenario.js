@@ -40,18 +40,22 @@ class NewScenario extends Component {
         onSuccess: {
           action: {
             effect: 1,
-            textOrWAV: "",
+            textOrWav: "",
             whatToPlay: ""
           },
           nextScenarioID: ""
         },
         onfailure: {
-          action: { effect: 1, textOrWAV: "", whatToPlay: "" },
+          action: { effect: 1, textOrWav: "", whatToPlay: "" },
           numOfRetries: 2,
           nextScenarioID: ""
         }
       }
     };
+
+    if (this.props.editMode) {
+      this.state.data = this.props.data.value;
+    }
 
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -120,8 +124,10 @@ class NewScenario extends Component {
               </Grid>
               <Grid item xs={8}>
                 <NewAction
+                  editMode={this.props.editMode}
                   addAction={this.handleActionSubmit}
                   ref_main={this.state.ref_main}
+                  data={this.props.editMode ? this.state.data.actions[0] : ""}
                 />
               </Grid>
             </Grid>
@@ -137,7 +143,11 @@ class NewScenario extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={8}>
-                <NewAnswer addAnswer={this.handleAnswerSubmit} />
+                <NewAnswer
+                  addAnswer={this.handleAnswerSubmit}
+                  editMode={this.props.editMode}
+                  data={this.props.editMode ? this.state.data.waitFor : ""}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -153,7 +163,11 @@ class NewScenario extends Component {
               </Typography>
             </Grid>
             <Grid item xs={8}>
-              <NewSuccess addSuccess={this.handleSuccessSubmit} />
+              <NewSuccess
+                addSuccess={this.handleSuccessSubmit}
+                editMode={this.props.editMode}
+                data={this.props.editMode ? this.state.data.onSuccess : ""}
+              />
             </Grid>
           </Grid>
           <Grid
@@ -168,7 +182,11 @@ class NewScenario extends Component {
               </Typography>
             </Grid>
             <Grid item xs={8}>
-              <NewFailure addFailure={this.handleFailureSubmit} />
+              <NewFailure
+                addFailure={this.handleFailureSubmit}
+                editMode={this.props.editMode}
+                data={this.props.editMode ? this.state.data.onfailure : ""}
+              />
             </Grid>
           </Grid>
           <Grid
@@ -204,38 +222,43 @@ class NewScenario extends Component {
   };
 
   handleSubmit(event) {
-    this.state.ref_main.add(this.state.data);
-    this.props.addScenario(this.state.data);
-    this.setState(state => ({
-      added: !state.added,
-      add_new: !state.add_new,
-      data: {
-        name: "",
-        level: 1,
-        actions: [],
-        waitFor: {
-          expectedAnswer: {
-            input: "",
-            successRating: 0
+    if (this.props.editMode) {
+      this.state.ref_main.doc(this.props.data.key).set(this.state.data);
+      this.props.addScenario(this.state.data);
+    } else {
+      this.state.ref_main.add(this.state.data);
+      this.props.addScenario(this.state.data);
+      this.setState(state => ({
+        added: !state.added,
+        add_new: !state.add_new,
+        data: {
+          name: "",
+          level: 1,
+          actions: [],
+          waitFor: {
+            expectedAnswer: {
+              input: "",
+              successRating: 0
+            },
+            typeOfWaiting: 1,
+            typeOfInput: ""
           },
-          typeOfWaiting: 1,
-          typeOfInput: ""
-        },
-        onSuccess: {
-          action: {
-            effect: 1,
-            textOrWAV: "",
-            whatToPlay: ""
+          onSuccess: {
+            action: {
+              effect: 1,
+              textOrWav: "",
+              whatToPlay: ""
+            },
+            nextScenarioID: ""
           },
-          nextScenarioID: ""
-        },
-        onfailure: {
-          action: { effect: 1, textOrWAV: "", whatToPlay: "" },
-          numOfRetries: 2,
-          nextScenarioID: ""
+          onfailure: {
+            action: { effect: 1, textOrWav: "", whatToPlay: "" },
+            numOfRetries: 2,
+            nextScenarioID: ""
+          }
         }
-      }
-    }));
+      }));
+    }
     event.preventDefault();
   }
 

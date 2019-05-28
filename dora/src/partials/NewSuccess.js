@@ -20,8 +20,8 @@ class NewSuccess extends Component {
     this.state = {
       data: {
         action: {
-          effect: "happyFace",
-          textOrWAV: "",
+          effect: "Smile",
+          textOrWav: "",
           whatToPlay: ""
         },
         nextScenarioID: ""
@@ -29,6 +29,10 @@ class NewSuccess extends Component {
       scenarios: [],
       scenarios_ref: firebase.firestore().collection("Scenarios")
     };
+
+    if (this.props.editMode) {
+      this.state.data = this.props.data;
+    }
 
     this.getAllScenarios();
 
@@ -57,8 +61,8 @@ class NewSuccess extends Component {
                 fullWidth
                 multiline
                 label="What to Say"
-                value={this.state.data.action.textOrWAV}
-                onChange={this.handleFieldChange("textOrWAV", true)}
+                value={this.state.data.action.textOrWav}
+                onChange={this.handleFieldChange("textOrWav", true)}
                 onBlur={this.handleSubmit}
               />
             </Grid>
@@ -114,7 +118,7 @@ class NewSuccess extends Component {
                   onChange={this.handleFieldChange("effect", true)}
                   onBlur={this.handleSubmit}
                 >
-                  <MenuItem key="1" value="happyFace">
+                  <MenuItem key="1" value="Smile">
                     😊 - Happy Face
                   </MenuItem>
                   <MenuItem key="2" value="sadFace">
