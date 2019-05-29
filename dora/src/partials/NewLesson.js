@@ -28,12 +28,9 @@ class NewLessons extends Component {
       ref_main: firebase.firestore().collection("sole_jr_comp_app_lessons"),
       scenarios_ref: firebase.firestore().collection("Scenarios"),
       scenarios: [],
-      isUploading: false,
-      progress: 0,
       data: {
         title: "",
         category: "",
-        badge: "",
         goals: [],
         scenariosInLesson: []
       },
@@ -44,11 +41,6 @@ class NewLessons extends Component {
     this.handleSubmitGoal = this.handleSubmitGoal.bind(this);
     this.removeGoal = this.removeGoal.bind(this);
     this.handleChange = this.handleChange.bind(this);
-
-    this.handleUploadStart = this.handleUploadStart.bind(this);
-    this.handleProgress = this.handleProgress.bind(this);
-    this.handleUploadError = this.handleUploadError.bind(this);
-    this.handleUploadSuccess = this.handleUploadSuccess.bind(this);
 
     this.getAllScenarios();
   }
@@ -125,40 +117,6 @@ class NewLessons extends Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={8}>
-              <TextField
-                disabled
-                id="badge"
-                className="action-label"
-                multiline
-                fullWidth
-                label="Lesson Badge"
-                value={this.state.data.badge}
-                onChange={this.handleFieldChange("badge")}
-              />
-            </Grid>
-            <Grid item>
-              <div>
-                <FileUploader
-                  hidden
-                  id="raised-button-file"
-                  accept="image/*"
-                  randomizeFilename
-                  storageRef={firebase.storage().ref("badges")}
-                  onUploadStart={this.handleUploadStart}
-                  onUploadError={this.handleUploadError}
-                  onUploadSuccess={this.handleUploadSuccess}
-                  onProgress={this.handleProgress}
-                />
-                <label htmlFor="raised-button-file">
-                  <Tooltip title="Add Badge" placement="top">
-                    <Button component="span">
-                      <AddIcon color="secondary" />
-                    </Button>
-                  </Tooltip>
-                </label>
-              </div>
-            </Grid>
             <Grid item sm={8}>
               <FormControl>
                 <InputLabel htmlFor="select-multiple">
@@ -210,7 +168,6 @@ class NewLessons extends Component {
         data: {
           title: "",
           category: "",
-          badge: "",
           goals: [],
           scenariosInLesson: []
         }
@@ -236,29 +193,6 @@ class NewLessons extends Component {
     let data = { ...this.state.data };
     data[field] = event.target.value;
     this.setState({ data });
-  };
-
-  handleUploadStart = () => this.setState({ isUploading: true, progress: 0 });
-
-  handleProgress = progress => this.setState({ progress });
-
-  handleUploadError = error => {
-    this.setState({ isUploading: false });
-    console.error(error);
-  };
-
-  handleUploadSuccess = filename => {
-    this.setState({
-      data: { badge: filename },
-      progress: 100,
-      isUploading: false
-    });
-    firebase
-      .storage()
-      .ref("badges")
-      .child(filename)
-      .getDownloadURL()
-      .then(url => this.setState({ data: { badge: url } }));
   };
 
   getAllScenarios() {
