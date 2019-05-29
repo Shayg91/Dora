@@ -41,7 +41,7 @@ class Lesson extends Component {
               <MoreVertIcon onClick={this.handleClick} />
             </IconButton>
           }
-          title={this.props.data.title}
+          title={this.props.data.value.title}
           subheader={this.props.data.category}
         />
         <Menu
@@ -53,7 +53,6 @@ class Lesson extends Component {
           <MenuItem onClick={this.handleEdit}>Edit</MenuItem>
           <MenuItem onClick={this.handleDelete}>Delete</MenuItem>
         </Menu>
-        <CardMedia style={imgStyle} image={this.props.data.value.badge} />
         <CardContent>
           <Typography component="p">
             Goals:
@@ -81,7 +80,6 @@ class Lesson extends Component {
   };
 
   handleDelete = () => {
-    console.log(this.props.data.key);
     let that = this;
     firebase
       .firestore()
