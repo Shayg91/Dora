@@ -41,12 +41,15 @@ class Lessons extends Component {
       ref_main: firebase.firestore().collection("sole_jr_comp_app_lessons"),
       add_new: false,
       added: false,
+      editMode: false,
       selected_lesson: null
     };
 
     this.handleToggleClick = this.handleToggleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleLessonSelected = this.handleLessonSelected.bind(this);
+    this.handleLessonEdit = this.handleLssonUpdate.bind(this);
+
     this.getAllLessons();
   }
 
@@ -192,6 +195,12 @@ class Lessons extends Component {
       lessons: lessons
     }));
     console.log("deleted");
+  };
+
+  handleLessonEdit = () => {
+    this.setState(state => ({
+      editMode: true
+    }));
   };
 }
 
