@@ -41,8 +41,8 @@ class Scenario extends Component {
       <Card>
         <CardHeader
           action={
-            <IconButton>
-              <MoreVertIcon onClick={this.handleClick} />
+            <IconButton onClick={this.handleClick}>
+              <MoreVertIcon />
             </IconButton>
           }
           title={this.props.data.value.name}

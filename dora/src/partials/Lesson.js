@@ -16,11 +16,6 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import "./Lesson.css";
 
-var imgStyle = {
-  height: "300px"
-  // paddingTop: "25%" // 16:9
-};
-
 class Lesson extends Component {
   constructor(props) {
     super(props);
@@ -37,8 +32,8 @@ class Lesson extends Component {
       <Card>
         <CardHeader
           action={
-            <IconButton>
-              <MoreVertIcon onClick={this.handleClick} />
+            <IconButton onClick={this.handleClick}>
+              <MoreVertIcon />
             </IconButton>
           }
           title={this.props.data.value.title}
