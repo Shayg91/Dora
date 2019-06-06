@@ -48,7 +48,8 @@ class Lessons extends Component {
     this.handleToggleClick = this.handleToggleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleLessonSelected = this.handleLessonSelected.bind(this);
-    this.handleLessonEdit = this.handleLssonUpdate.bind(this);
+    this.handleLessonEdit = this.handleLessonEdit.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
 
     this.getAllLessons();
   }
@@ -91,15 +92,24 @@ class Lessons extends Component {
           </Grid>
           <Grid item className="content">
             <div>
-              {this.state.selected_lesson == null && !this.state.add_new ? (
+              {this.state.selected_lesson == null &&
+              !this.state.add_new &&
+              !this.state.editMode ? (
                 "No Lesson Selected"
-              ) : !this.state.add_new ? (
+              ) : !this.state.add_new && !this.state.editMode ? (
                 <Lesson
                   data={this.state.selected_lesson}
                   onDelete={this.deleteLesson}
+                  handleEdit={this.handleLessonEdit}
+                />
+              ) : this.state.editMode ? (
+                <NewLesson
+                  addLesson={this.handleUpdate}
+                  data={this.state.selected_lesson}
+                  editMode={true}
                 />
               ) : (
-                <NewLesson addLesson={this.handleSubmit} />
+                <NewLesson addLesson={this.handleSubmit} editMode={false} />
               )}
             </div>
           </Grid>
@@ -200,6 +210,24 @@ class Lessons extends Component {
   handleLessonEdit = () => {
     this.setState(state => ({
       editMode: true
+    }));
+  };
+
+  handleUpdate = data => {
+    let position;
+    let updated_lessons = this.state.lessons;
+    for (let i = 0; i < this.state.lessons.length; i++) {
+      if (this.state.lessons[i].key === this.state.selected_lesson.key) {
+        position = i;
+        break;
+      }
+    }
+
+    updated_lessons[position].value = data;
+
+    this.setState(state => ({
+      scenarios: updated_lessons,
+      editMode: false
     }));
   };
 }
