@@ -46,7 +46,7 @@ class Scenario extends Component {
             </IconButton>
           }
           title={this.props.data.value.name}
-          subheader={this.props.data.value.level}
+          subheader={"Level: " + this.props.data.value.level}
         />
         <Menu
           id="simple-menu"

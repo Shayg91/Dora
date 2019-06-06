@@ -36,6 +36,11 @@ class NewLessons extends Component {
       },
       goalToAdd: ""
     };
+
+    if (this.props.editMode) {
+      this.state.data = this.props.data.value;
+    }
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSubmitGoal = this.handleSubmitGoal.bind(this);
@@ -160,6 +165,10 @@ class NewLessons extends Component {
 
   handleSubmit(event) {
     let that = this;
+    if (this.props.editMode) {
+      this.state.ref_main.doc(this.props.data.key).set(this.state.data);
+      this.props.addLesson(this.state.data);
+    }
     this.state.ref_main.add(this.state.data).then(function(docRef) {
       that.props.addLesson(docRef.id, that.state.data);
       that.setState(state => ({

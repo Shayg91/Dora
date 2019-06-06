@@ -25,6 +25,7 @@ class Lesson extends Component {
     };
 
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   render() {
@@ -92,6 +93,10 @@ class Lesson extends Component {
 
   handleClose = () => {
     this.setState({ anchorEl: null });
+  };
+
+  handleEdit = () => {
+    this.props.handleEdit();
   };
 }
 
