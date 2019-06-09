@@ -15,7 +15,8 @@ import ClassIcon from "@material-ui/icons/Class";
 
 import Lessons from "./Lessons";
 import Scenarios from "./Scenarios";
-import Actions from "./Actions";
+
+import "./MainAppBar.css";
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -62,7 +63,7 @@ function MainAppBar(props) {
           <div className={classes.toolbar} />
           <List>
             <NavLink to="/Lessons">
-              <ListItem button key="Lessons">
+              <ListItem className="link-item" button key="Lessons">
                 <ListItemIcon>
                   <ClassIcon />
                 </ListItemIcon>
