@@ -106,8 +106,8 @@ class Scenario extends Component {
       .where("scenariosInLesson", "array-contains", scenariosNameToDelete)
       .get()
       .then(doc => {
-        console.log(doc.docs[0].exists);
-        if (doc.docs[0] && doc.docs[0].exists) {
+        console.log(doc.docs.length && doc.docs[0].exists);
+        if (doc.docs.length && doc.docs[0].exists) {
           scenarioIsConnectedToLesson = true;
         }
       });
@@ -118,8 +118,8 @@ class Scenario extends Component {
       .where("onSuccsess.nextScenarioID", "==", scenariosNameToDelete)
       .get()
       .then(doc => {
-        console.log(doc);
-        if (doc.docs[0] && doc.docs[0].exists) {
+        console.log(doc.docs.length && doc.docs[0].exists);
+        if (doc.docs.length && doc.docs[0].exists) {
           scenarioIsConnectedToScenarioSuccess = true;
         }
       });
@@ -130,8 +130,8 @@ class Scenario extends Component {
       .where("onfailure.nextScenarioID", "==", scenariosNameToDelete)
       .get()
       .then(doc => {
-        console.log(doc);
-        if (doc.docs[0] && doc.docs[0].exists) {
+        console.log(doc.docs.length && doc.docs[0].exists);
+        if (doc.docs.length && doc.docs[0].exists) {
           scenarioIsConnectedToScenarioFailiure = true;
         }
       });
