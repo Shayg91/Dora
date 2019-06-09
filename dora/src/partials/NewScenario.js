@@ -226,8 +226,10 @@ class NewScenario extends Component {
       this.state.ref_main.doc(this.props.data.key).set(this.state.data);
       this.props.addScenario(this.state.data);
     } else {
-      this.state.ref_main.add(this.state.data);
-      this.props.addScenario(this.state.data);
+      this.state.ref_main.add(this.state.data).then(docRef => {
+        this.props.addScenario(docRef.id, this.state.data);
+      });
+
       this.setState(state => ({
         added: !state.added,
         add_new: !state.add_new,
