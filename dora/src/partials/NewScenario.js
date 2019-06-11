@@ -144,7 +144,13 @@ class NewScenario extends Component {
                     data={this.props.editMode ? x.value : ""}
                   />
                 ))}
-                <Button onClick={this.handleNewAction}>Add New Action</Button>
+                <Button
+                  onClick={this.handleNewAction}
+                  color="secondary"
+                  variant="text"
+                >
+                  Add New Action
+                </Button>
               </Grid>
             </Grid>
             <Grid
