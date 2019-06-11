@@ -32,7 +32,7 @@ class NewScenario extends Component {
         waitFor: {
           expectedAnswer: {
             input: "",
-            successRating: 0
+            successRating: 75
           },
           typeOfWaiting: 1,
           typeOfInput: ""
@@ -50,15 +50,27 @@ class NewScenario extends Component {
           numOfRetries: 2,
           nextScenarioID: ""
         }
-      }
+      },
+      allActions: [
+        { key: 0, value: { effect: "Smile", textOrWav: "", whatToPlay: "" } }
+      ]
     };
 
     if (this.props.editMode) {
+      let i = 0;
+      this.state.allActions = [];
       this.state.data = this.props.data.value;
+      this.props.data.value.actions.forEach(x => {
+        this.state.allActions.push({ key: i, value: x });
+        i++;
+      });
     }
+
+    console.log(this.props);
 
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleNewAction = this.handleNewAction.bind(this);
   }
 
   render() {
@@ -123,12 +135,22 @@ class NewScenario extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={8}>
-                <NewAction
-                  editMode={this.props.editMode}
-                  addAction={this.handleActionSubmit}
-                  ref_main={this.state.ref_main}
-                  data={this.props.editMode ? this.state.data.actions[0] : ""}
-                />
+                {this.state.allActions.map(x => (
+                  <NewAction
+                    actionNum={x.key}
+                    editMode={this.props.editMode}
+                    addAction={this.handleActionSubmit}
+                    ref_main={this.state.ref_main}
+                    data={this.props.editMode ? x.value : ""}
+                  />
+                ))}
+                <Button
+                  onClick={this.handleNewAction}
+                  color="secondary"
+                  variant="text"
+                >
+                  Add New Action
+                </Button>
               </Grid>
             </Grid>
             <Grid
@@ -224,53 +246,40 @@ class NewScenario extends Component {
   handleSubmit(event) {
     if (this.props.editMode) {
       this.state.ref_main.doc(this.props.data.key).set(this.state.data);
-      this.props.addScenario(this.state.data);
+      this.props.addScenario(this.props.data.key, this.state.data);
     } else {
-      this.state.ref_main.add(this.state.data).then(docRef => {
+      this.state.ref_main.add(this.state.data).then(function(docRef) {
         this.props.addScenario(docRef.id, this.state.data);
+        this.setState(state => ({
+          added: !state.added,
+          add_new: !state.add_new
+        }));
       });
-
-      this.setState(state => ({
-        added: !state.added,
-        add_new: !state.add_new,
-        data: {
-          name: "",
-          level: 1,
-          actions: [],
-          waitFor: {
-            expectedAnswer: {
-              input: "",
-              successRating: 0
-            },
-            typeOfWaiting: 1,
-            typeOfInput: ""
-          },
-          onSuccess: {
-            action: {
-              effect: 1,
-              textOrWav: "",
-              whatToPlay: ""
-            },
-            nextScenarioID: ""
-          },
-          onfailure: {
-            action: { effect: 1, textOrWav: "", whatToPlay: "" },
-            numOfRetries: 2,
-            nextScenarioID: ""
-          }
-        }
-      }));
     }
+
     event.preventDefault();
   }
 
-  handleActionSubmit = action => {
-    //let actionsList = [...this.state.data.actions];
-    let actionsList = [];
-    actionsList.push(action);
+  handleActionSubmit = (key, action) => {
+    let actionsList = [...this.state.data.actions];
+    if (actionsList.length <= key) {
+      actionsList.push(action);
+    } else {
+      actionsList[key] = action;
+    }
     this.setState({
       data: { ...this.state.data, actions: actionsList }
     });
+  };
+
+  handleNewAction = () => {
+    let actions = this.state.allActions;
+    actions.push({
+      key: actions.length,
+      value: { effect: "Smile", textOrWav: "", whatToPlay: "" }
+    });
+
+    this.setState({ allActions: actions });
   };
 
   handleAnswerSubmit = answer => {

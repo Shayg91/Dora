@@ -20,6 +20,7 @@ class NewAction extends Component {
     this.state = {
       isUploading: false,
       progress: 0,
+      key: props.actionNum,
       data: {
         effect: "Smile",
         textOrWav: "",
@@ -39,8 +40,6 @@ class NewAction extends Component {
   }
 
   render() {
-    console.log("state", this.state);
-    console.log("props", this.props);
     return (
       <Paper className="new-action">
         <Grid
@@ -93,13 +92,6 @@ class NewAction extends Component {
                   onUploadSuccess={this.handleUploadSuccess}
                   onProgress={this.handleProgress}
                 />
-                {/* <input
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  id="raised-button-file"
-                  type="file"
-                  onChange={this.handleFieldChange("whatToPlay")}
-                /> */}
 
                 <label htmlFor="raised-button-file">
                   <Tooltip title="Add Picture" placement="top">
@@ -137,15 +129,6 @@ class NewAction extends Component {
                   </MenuItem>
                 </TextField>
               </Grid>
-              {/* <Grid item>
-                <Button
-                  onClick={this.handleSubmit}
-                  color="secondary"
-                  className="save-btn"
-                >
-                  Save Action
-                </Button>
-              </Grid> */}
             </Grid>
           </Grid>
         </Grid>
@@ -160,7 +143,7 @@ class NewAction extends Component {
   };
 
   handleSubmit = event => {
-    this.props.addAction(this.state.data);
+    this.props.addAction(this.state.key, this.state.data);
     event.preventDefault();
   };
 
@@ -174,17 +157,23 @@ class NewAction extends Component {
   };
 
   handleUploadSuccess = filename => {
+    let data = this.state.data;
+    data.whatToPlay = filename;
     this.setState({
-      data: { whatToPlay: filename },
+      data: data,
       progress: 100,
       isUploading: false
     });
+
     firebase
       .storage()
       .ref("images")
       .child(filename)
       .getDownloadURL()
-      .then(url => this.setState({ data: { whatToPlay: url } }));
+      .then(url => {
+        data.whatToPlay = url;
+        this.setState({ data: data });
+      });
   };
 }
 
