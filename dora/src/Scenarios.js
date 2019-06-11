@@ -49,6 +49,7 @@ class Scenarios extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleScenarioSelected = this.handleScenarioSelected.bind(this);
     this.handleScenarioEdit = this.handleScenarioEdit.bind(this);
+    this.handleScenarioDelete = this.handleScenarioDelete.bind(this);
     this.getAllScenarios();
   }
 
@@ -100,6 +101,7 @@ class Scenarios extends Component {
                 <Scenario
                   data={this.state.selected_scenario}
                   handleEdit={this.handleScenarioEdit}
+                  onDelete={this.handleScenarioDelete}
                 />
               ) : this.state.editMode ? (
                 // Editing Scenario
@@ -211,6 +213,26 @@ class Scenarios extends Component {
     this.setState(state => ({
       scenarios: updated_scenarios,
       editMode: false
+    }));
+  };
+
+  handleScenarioDelete = () => {
+    let scenarios = this.state.scenarios;
+    let palcement = 0;
+
+    while (palcement !== scenarios.length) {
+      if (scenarios[palcement].key === this.state.selected_scenario.key) {
+        break;
+      } else {
+        palcement++;
+      }
+    }
+
+    scenarios.splice(palcement, 1);
+
+    this.setState(state => ({
+      selected_scenario: null,
+      scenarios: scenarios
     }));
   };
 }

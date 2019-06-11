@@ -32,8 +32,6 @@ class Scenario extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
-    this.isConnectedToLessons = this.isConnectedToLessons.bind(this);
-    this.isConnectedToScenarios = this.isConnectedToScenarios.bind(this);
   }
 
   render() {
@@ -94,7 +92,6 @@ class Scenario extends Component {
 
   handleDelete = () => {
     let scenariosNameToDelete = this.props.data.value.name;
-    let scenariosIdToDelete = this.props.data.key;
 
     let scenarioIsConnectedToLesson = false;
     let scenarioIsConnectedToScenarioSuccess = false;
@@ -167,47 +164,6 @@ class Scenario extends Component {
           });
       }
     });
-  };
-
-  isConnectedToLessons = name => {
-    let lessonsWithScenario = [];
-    firebase
-      .firestore()
-      .collection("sole_jr_comp_app_lessons")
-      .where("scenariosInLesson", "array-contains", name)
-      .get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-          lessonsWithScenario = [...lessonsWithScenario, doc];
-        });
-
-        if (lessonsWithScenario.length > 0) {
-          return false;
-        }
-
-        return true;
-      });
-  };
-
-  isConnectedToScenarios = name => {
-    let connectedScenarios = [];
-    firebase
-      .firestore()
-      .collection("Scenarios")
-      .child()
-      .where("onfailure/nextScenarioID", "==", name)
-      .get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-          connectedScenarios = [...connectedScenarios, doc];
-        });
-
-        if (connectedScenarios.length > 0) {
-          return false;
-        }
-
-        return true;
-      });
   };
 
   handleClose = () => {
