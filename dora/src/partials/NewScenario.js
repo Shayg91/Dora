@@ -57,7 +57,13 @@ class NewScenario extends Component {
     };
 
     if (this.props.editMode) {
+      let i = 0;
+      this.state.allActions = [];
       this.state.data = this.props.data.value;
+      this.props.data.value.actions.forEach(x => {
+        this.state.allActions.push({ key: i, value: x });
+        i++;
+      });
     }
 
     console.log(this.props);
