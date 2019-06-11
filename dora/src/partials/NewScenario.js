@@ -29,27 +29,9 @@ class NewScenario extends Component {
         name: "",
         level: 1,
         actions: [],
-        waitFor: {
-          expectedAnswer: {
-            input: "",
-            successRating: 75
-          },
-          typeOfWaiting: 1,
-          typeOfInput: ""
-        },
-        onSuccess: {
-          action: {
-            effect: 1,
-            textOrWav: "",
-            whatToPlay: ""
-          },
-          nextScenarioID: ""
-        },
-        onfailure: {
-          action: { effect: 1, textOrWav: "", whatToPlay: "" },
-          numOfRetries: 2,
-          nextScenarioID: ""
-        }
+        waitFor: {},
+        onSuccess: {},
+        onfailure: {}
       },
       allActions: [
         { key: 0, value: { effect: "Smile", textOrWav: "", whatToPlay: "" } }
