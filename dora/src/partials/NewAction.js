@@ -20,6 +20,7 @@ class NewAction extends Component {
     this.state = {
       isUploading: false,
       progress: 0,
+      key: props.actionNum,
       data: {
         effect: "Smile",
         textOrWav: "",
@@ -39,8 +40,6 @@ class NewAction extends Component {
   }
 
   render() {
-    console.log("state", this.state);
-    console.log("props", this.props);
     return (
       <Paper className="new-action">
         <Grid
@@ -160,7 +159,7 @@ class NewAction extends Component {
   };
 
   handleSubmit = event => {
-    this.props.addAction(this.state.data);
+    this.props.addAction(this.state.key, this.state.data);
     event.preventDefault();
   };
 
