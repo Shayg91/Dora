@@ -14,7 +14,7 @@ class NewAction extends Component {
           successRating: 75
         },
         typeOfWaiting: 1,
-        typeOfInput: ""
+        typeOfInput: "speech"
       },
       mulChoice: {
         correct: "",

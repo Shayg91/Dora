@@ -60,18 +60,56 @@ class Scenario extends Component {
           image={this.props.data.value.actions[0].whatToPlay}
         />
         <CardContent>
-          <Typography component="p">
-            Question: {this.props.data.value.actions[0].textOrWav}
+          <Typography variant="h6">
+            Actions and Questions:{" "}
+            {this.props.data.value.actions.map(x => (
+              <Typography variant="body1">{x.textOrWav}</Typography>
+            ))}
           </Typography>
           {this.props.data.value.waitFor.typeOfInput != "mulChoice" ? (
-            <Typography component="p">
-              Answer: {this.props.data.value.waitFor.expectedAnswer.input}
+            <Typography variant="h6">
+              Answer:{" "}
+              <Typography variant="body1">
+                {this.props.data.value.waitFor.expectedAnswer.input}
+              </Typography>
             </Typography>
           ) : (
-            <Typography component="p">
-              Correct Answer:
-              {this.props.data.value.waitFor.expectedAnswer.input.split(",")[0]}
-            </Typography>
+            <div>
+              <Typography variant="h6">
+                Correct Answer:
+                <Typography variant="body1">
+                  {
+                    this.props.data.value.waitFor.expectedAnswer.input.split(
+                      ","
+                    )[0]
+                  }
+                </Typography>
+              </Typography>
+              <Typography variant="h6">
+                Incorrect Answers:
+                <Typography variant="body1">
+                  {
+                    this.props.data.value.waitFor.expectedAnswer.input.split(
+                      ","
+                    )[1]
+                  }
+                </Typography>
+                <Typography variant="body1">
+                  {
+                    this.props.data.value.waitFor.expectedAnswer.input.split(
+                      ","
+                    )[2]
+                  }
+                </Typography>
+                <Typography variant="body1">
+                  {
+                    this.props.data.value.waitFor.expectedAnswer.input.split(
+                      ","
+                    )[3]
+                  }
+                </Typography>
+              </Typography>
+            </div>
           )}
         </CardContent>
       </Card>
