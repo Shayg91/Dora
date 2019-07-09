@@ -1,21 +1,18 @@
 {
-  "name": "dora",
+  "name": "react-firebase-authentication",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.0.1",
-    "@material-ui/icons": "^4.0.1",
-    "@material-ui/styles": "^4.0.1",
-    "array-move": "^2.1.0",
-    "firebase": "^6.1.0",
-    "material-components-web": "^0.43.0",
+    "@material-ui/core": "^4.1.3",
+    "@material-ui/icons": "^4.2.1",
+    "@material-ui/styles": "^4.1.2",
+    "firebase": "^6.2.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-firebase-file-uploader": "^2.4.2",
-    "react-native": "^0.58.5",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "^2.1.5",
-    "react-sortable-hoc": "^1.9.1"
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "react-with-firebase-auth": "^1.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -26,10 +23,16 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
