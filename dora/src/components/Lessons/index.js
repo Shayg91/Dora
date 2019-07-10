@@ -54,13 +54,15 @@ class LessonsPage extends Component {
       loading: false,
       lessons: [],
       selectedLesson: undefined,
-      createNew: false
+      createNew: false,
+      edit: false
     };
 
     this.handleLessonSelected = this.handleLessonSelected.bind(this);
     this.handleLessonDelete = this.handleLessonDelete.bind(this);
     this.handleNewLesson = this.handleNewLesson.bind(this);
     this.handleAddLesson = this.handleAddLesson.bind(this);
+    this.handleLessonEdit = this.handleLessonEdit.bind(this);
   }
 
   componentDidMount() {
@@ -103,24 +105,37 @@ class LessonsPage extends Component {
     });
   };
 
+  handleLessonEdit = () => {
+    this.setState(state => ({
+      createNew: false,
+      edit: true
+    }));
+  };
+
   handleNewLesson = () => {
     this.setState(state => ({
       createNew: true,
-      selectedLesson: undefined
+      selectedLesson: undefined,
+      edit: false
     }));
   };
 
   handleAddLesson = (key, value) => {
     console.log("Got Here");
-    this.setState(state => ({
-      lessons: [...state.lessons, { key: key, value: value }],
-      createNew: false,
-      selectedLesson: undefined
-    }));
+
+    /* if (!this.state.edit) {
+      this.setState(state => ({
+        lessons: [...state.lessons, { key: key, value: value }],
+        createNew: false,
+        selectedLesson: undefined
+      }));
+    } else {
+      console.log("Editing...");
+    } */
   };
 
   render() {
-    const { lessons, loading, selectedLesson, createNew } = this.state;
+    const { lessons, loading, selectedLesson, createNew, edit } = this.state;
 
     return (
       <div>
@@ -136,6 +151,7 @@ class LessonsPage extends Component {
             newLesson={this.handleNewLesson}
             addLesson={this.handleAddLesson}
             createNew={createNew}
+            edit={edit}
           />
         )}
       </div>
@@ -151,7 +167,8 @@ const LessonsList = ({
   editLesson,
   newLesson,
   addLesson,
-  createNew
+  createNew,
+  edit
 }) => {
   const classes = useStyles();
   return (
@@ -180,14 +197,18 @@ const LessonsList = ({
         </List>
       </Drawer>
       <main className={classes.content}>
-        {selectedLesson !== undefined ? (
+        {selectedLesson !== undefined && !createNew && !edit ? (
           <Lesson
             lesson={selectedLesson}
             deleteLesson={deleteLesson}
             editLesson={editLesson}
           />
-        ) : createNew ? (
-          <NewLessonForm addNewLesson={addLesson} />
+        ) : createNew || edit ? (
+          <NewLessonForm
+            addNewLesson={addLesson}
+            edit={edit}
+            data={selectedLesson}
+          />
         ) : (
           <Typography>No Lesson Selected</Typography>
         )}

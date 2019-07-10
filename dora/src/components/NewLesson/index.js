@@ -36,7 +36,12 @@ class NewLessonBase extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { data: { ...INITIAL_STATE }, scenarios: [], goalToAdd: "" };
+    this.state = {
+      data: { ...INITIAL_STATE },
+      scenarios: [],
+      goalToAdd: "",
+      key: ""
+    };
 
     this.onSubmit = this.onSubmit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
@@ -46,6 +51,15 @@ class NewLessonBase extends Component {
   }
 
   componentDidMount() {
+    if (this.props.edit) {
+      this.setState({ data: this.props.data.value, key: this.props.data.key });
+    } else {
+      const new_key = this.props.firebase.db
+        .collection("sole_jr_comp_app_lessons")
+        .doc();
+      this.setState({ key: new_key.id });
+    }
+
     this.props.firebase.scenarios().then(allScenarios => {
       this.setState({
         scenarios: allScenarios
@@ -63,7 +77,7 @@ class NewLessonBase extends Component {
   };
 
   handleGoalChanged = field => event => {
-    this.setState({ goalToAdd: event.target.value });
+    this.setState({ goalToAdd: event.target.value }, this.onSubmit(event));
   };
 
   handleFieldChange = field => event => {
@@ -91,16 +105,19 @@ class NewLessonBase extends Component {
   }
 
   onSubmit = event => {
-    const { data } = this.state;
+    const { data, key } = this.state;
 
+    // TODO: Use only this part for the Auto Create of the lesson. Also use this.props.firebase.db.collection().doc() to get
+    // new ID for new document in the beginning - at componentDidMount
     const currentContext = this;
     this.props.firebase.db
       .collection("sole_jr_comp_app_lessons")
-      .add(data)
+      .doc(key)
+      .set(data)
       .then(docRef => {
         console.log(currentContext);
-        currentContext.props.addNewLesson(docRef.id, data);
-        console.log("Added new Lesson: " + docRef.id);
+        currentContext.props.addNewLesson(key, data);
+        console.log("Updated Lesson: " + docRef.id);
       })
       .catch(error => {
         this.setState({ error });
@@ -134,6 +151,7 @@ class NewLessonBase extends Component {
                 fullWidth
                 value={data.title}
                 onChange={this.handleFieldChange("title")}
+                onBlur={this.onSubmit}
               />
             </Grid>
             <Grid item sm={10}>
@@ -143,6 +161,7 @@ class NewLessonBase extends Component {
                 fullWidth
                 value={data.category}
                 onChange={this.handleFieldChange("category")}
+                onBlur={this.onSubmit}
               />
             </Grid>
             <Grid
@@ -167,6 +186,7 @@ class NewLessonBase extends Component {
                     fullWidth
                     value={goalToAdd}
                     onChange={this.handleGoalChanged("goalToAdd")}
+                    onBlur={this.onSubmit}
                   />
                 </Grid>
                 <Grid item sm={2}>
