@@ -104,11 +104,16 @@ class NewLessonBase extends Component {
     }));
   }
 
+  closeDialog = event => {
+    const { data, key } = this.state;
+    this.props.closeLesson(key, data);
+
+    event.preventDefault();
+  };
+
   onSubmit = event => {
     const { data, key } = this.state;
 
-    // TODO: Use only this part for the Auto Create of the lesson. Also use this.props.firebase.db.collection().doc() to get
-    // new ID for new document in the beginning - at componentDidMount
     const currentContext = this;
     this.props.firebase.db
       .collection("sole_jr_comp_app_lessons")
@@ -230,9 +235,9 @@ class NewLessonBase extends Component {
               <Button
                 color="secondary"
                 variant="contained"
-                onClick={this.onSubmit}
+                onClick={this.closeDialog}
               >
-                Save Lesson
+                Close
               </Button>
             </Grid>
           </Grid>

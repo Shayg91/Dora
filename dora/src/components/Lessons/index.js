@@ -63,6 +63,7 @@ class LessonsPage extends Component {
     this.handleNewLesson = this.handleNewLesson.bind(this);
     this.handleAddLesson = this.handleAddLesson.bind(this);
     this.handleLessonEdit = this.handleLessonEdit.bind(this);
+    this.handleCloseDialog = this.handleCloseDialog.bind(this);
   }
 
   componentDidMount() {
@@ -120,18 +121,40 @@ class LessonsPage extends Component {
     }));
   };
 
+  handleCloseDialog = (key, value) => {
+    this.handleAddLesson(key, value);
+    this.setState(state => ({
+      createNew: false,
+      edit: false
+    }));
+  };
+
   handleAddLesson = (key, value) => {
     console.log("Got Here");
 
-    /* if (!this.state.edit) {
+    // Check if the id was already added to the list of lessons
+    let isNew = true,
+      location = -1,
+      index = 0;
+
+    while (isNew && index < this.state.lessons.length) {
+      if (this.state.lessons[index].key === key) {
+        isNew = false;
+        location = index;
+      }
+      index++;
+    }
+
+    if (isNew) {
       this.setState(state => ({
-        lessons: [...state.lessons, { key: key, value: value }],
-        createNew: false,
-        selectedLesson: undefined
+        lessons: [...state.lessons, { key: key, value: value }]
       }));
     } else {
-      console.log("Editing...");
-    } */
+      let updatedLessons = this.state.lessons;
+      updatedLessons[location].value = value;
+
+      this.setState(state => ({ lessons: updatedLessons }));
+    }
   };
 
   render() {
@@ -152,6 +175,7 @@ class LessonsPage extends Component {
             addLesson={this.handleAddLesson}
             createNew={createNew}
             edit={edit}
+            close={this.handleCloseDialog}
           />
         )}
       </div>
@@ -168,7 +192,8 @@ const LessonsList = ({
   newLesson,
   addLesson,
   createNew,
-  edit
+  edit,
+  close
 }) => {
   const classes = useStyles();
   return (
@@ -208,6 +233,7 @@ const LessonsList = ({
             addNewLesson={addLesson}
             edit={edit}
             data={selectedLesson}
+            closeLesson={close}
           />
         ) : (
           <Typography>No Lesson Selected</Typography>
