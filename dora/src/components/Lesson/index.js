@@ -19,8 +19,6 @@ class Lesson extends Component {
     this.state = {
       anchorEl: null
     };
-
-    this.handleEdit = this.handleEdit.bind(this);
   }
 
   render() {
@@ -41,7 +39,7 @@ class Lesson extends Component {
           open={Boolean(this.state.anchorEl)}
           onClose={this.handleClose}
         >
-          <MenuItem onClick={this.handleEdit}>Edit</MenuItem>
+          <MenuItem onClick={this.props.editLesson}>Edit</MenuItem>
           <MenuItem onClick={this.props.deleteLesson}>Delete</MenuItem>
         </Menu>
         <CardContent>
@@ -72,10 +70,6 @@ class Lesson extends Component {
 
   handleClose = () => {
     this.setState({ anchorEl: null });
-  };
-
-  handleEdit = () => {
-    this.props.handleEdit();
   };
 }
 
