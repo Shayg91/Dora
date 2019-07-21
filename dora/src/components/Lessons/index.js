@@ -79,9 +79,16 @@ class LessonsPage extends Component {
   }
 
   handleLessonSelected = lesson => {
-    console.log(lesson);
+    if (
+      this.state.selectedLesson &&
+      this.state.selectedLesson.key == lesson.key
+    ) {
+      return;
+    }
     this.setState(state => ({
-      selectedLesson: lesson
+      selectedLesson: lesson,
+      edit: false,
+      createNew: false
     }));
   };
 

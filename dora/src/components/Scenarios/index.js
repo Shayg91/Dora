@@ -96,9 +96,16 @@ class SceanriosPage extends Component {
   };
 
   handleScenarioSelected = scenario => {
-    console.log(scenario);
+    if (
+      this.state.selectedScenario &&
+      this.state.selectedScenario.key == scenario.key
+    ) {
+      return;
+    }
     this.setState(state => ({
-      selectedScenario: scenario
+      selectedScenario: scenario,
+      edit: false,
+      createNew: false
     }));
   };
 
