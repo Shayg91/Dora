@@ -23,7 +23,7 @@ class Lesson extends Component {
 
   render() {
     return (
-      <Card>
+      <Card onDoubleClick={this.props.editLesson}>
         <CardHeader
           action={
             <IconButton onClick={this.handleClick}>

@@ -32,7 +32,7 @@ class Scenario extends Component {
 
   render() {
     return (
-      <Card>
+      <Card onDoubleClick={this.props.editScenario}>
         <CardHeader
           action={
             <IconButton onClick={this.handleClick}>

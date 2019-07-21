@@ -14,8 +14,6 @@ import AddIcon from "@material-ui/icons/Add";
 
 import FileUploader from "react-firebase-file-uploader";
 
-import { INITIAL_STATE_ACTION } from "../../constants/initializers";
-
 class NewAction extends Component {
   constructor(props) {
     super(props);
