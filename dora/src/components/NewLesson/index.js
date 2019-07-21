@@ -19,25 +19,20 @@ import {
 import IconButton from "@material-ui/core/List";
 import DeleteIcon from "@material-ui/icons/Close";
 
+import { INITIAL_STATE_LESSON } from "../../constants/initializers";
+
 const NewLessonPage = () => (
   <div>
     <NewLessonForm />
   </div>
 );
 
-const INITIAL_STATE = {
-  title: "",
-  category: "",
-  goals: [],
-  scenariosInLesson: []
-};
-
 class NewLessonBase extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: { ...INITIAL_STATE },
+      data: { ...INITIAL_STATE_LESSON },
       scenarios: [],
       goalToAdd: "",
       key: ""

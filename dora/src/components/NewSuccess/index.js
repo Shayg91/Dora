@@ -18,14 +18,7 @@ class NewSuccess extends Component {
     super(props);
 
     this.state = {
-      data: {
-        action: {
-          effect: "Smile",
-          textOrWav: "",
-          whatToPlay: ""
-        },
-        nextScenarioID: ""
-      },
+      data: props.data,
       scenarios: []
     };
 

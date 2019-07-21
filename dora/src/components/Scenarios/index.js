@@ -54,12 +54,15 @@ class SceanriosPage extends Component {
       loading: false,
       scenarios: [],
       selectedScenario: undefined,
-      createNew: false
+      createNew: false,
+      edit: false
     };
 
     this.handleScenarioSelected = this.handleScenarioSelected.bind(this);
     this.handleNewScenario = this.handleNewScenario.bind(this);
     this.handleAddScenario = this.handleAddScenario.bind(this);
+    this.handleScenarioEdit = this.handleScenarioEdit.bind(this);
+    this.handleCloseDialog = this.handleCloseDialog.bind(this);
   }
 
   componentDidMount() {
@@ -81,24 +84,65 @@ class SceanriosPage extends Component {
     }));
   };
 
+  handleScenarioEdit = () => {
+    this.setState(state => ({
+      createNew: false,
+      edit: true
+    }));
+  };
+
   handleNewScenario = () => {
     this.setState(state => ({
       createNew: true,
-      selectedScenario: undefined
+      selectedLesson: undefined,
+      edit: false
+    }));
+  };
+
+  handleCloseDialog = (key, value) => {
+    this.handleAddScenario(key, value);
+    this.setState(state => ({
+      createNew: false,
+      edit: false
     }));
   };
 
   handleAddScenario = (key, value) => {
     console.log("Got Here");
-    this.setState(state => ({
-      scenarios: [...state.scenarios, { key: key, value: value }],
-      createNew: false,
-      selectedScenario: undefined
-    }));
+
+    // Check if the id was already added to the list of scenarios
+    let isNew = true,
+      location = -1,
+      index = 0;
+
+    while (isNew && index < this.state.scenarios.length) {
+      if (this.state.scenarios[index].key === key) {
+        isNew = false;
+        location = index;
+      }
+      index++;
+    }
+
+    if (isNew) {
+      this.setState(state => ({
+        scenarios: [...state.scenarios, { key: key, value: value }]
+      }));
+    } else {
+      let updatedScenarios = this.state.scenarios;
+      updatedScenarios[location].value = value;
+
+      this.setState(state => ({ scenarios: updatedScenarios }));
+    }
   };
 
   render() {
-    const { scenarios, loading, selectedScenario, createNew } = this.state;
+    const {
+      scenarios,
+      loading,
+      selectedScenario,
+      createNew,
+      edit
+    } = this.state;
     return (
       <div>
         {console.log(selectedScenario)}
@@ -109,9 +153,12 @@ class SceanriosPage extends Component {
             scenarios={scenarios}
             selectScenario={this.handleScenarioSelected}
             selectedScenario={selectedScenario}
+            editScenario={this.handleScenarioEdit}
             newScenario={this.handleNewScenario}
             addScenario={this.handleAddScenario}
             createNew={createNew}
+            edit={edit}
+            close={this.handleCloseDialog}
           />
         )}
       </div>
@@ -123,9 +170,12 @@ const ScenariosList = ({
   scenarios,
   selectScenario,
   selectedScenario,
+  editScenario,
   newScenario,
   addScenario,
-  createNew
+  createNew,
+  edit,
+  close
 }) => {
   const classes = useStyles();
   return (
@@ -154,12 +204,21 @@ const ScenariosList = ({
         </List>
       </Drawer>
       <main className={classes.content}>
-        {selectedScenario !== undefined ? (
-          <Scenario scenario={selectedScenario} />
-        ) : createNew ? (
-          <NewScenario addNewScenario={addScenario} />
+        {selectedScenario !== undefined && !createNew && !edit ? (
+          <Scenario
+            scenario={selectedScenario}
+            // deleteLesson={deleteLesson}
+            editScenario={editScenario}
+          />
+        ) : createNew || edit ? (
+          <NewScenario
+            addNewScenario={addScenario}
+            edit={edit}
+            data={selectedScenario}
+            closeScenario={close}
+          />
         ) : (
-          <Typography>No Scenario Selected</Typography>
+          <Typography>No Lesson Selected</Typography>
         )}
         {!createNew && (
           <Fab

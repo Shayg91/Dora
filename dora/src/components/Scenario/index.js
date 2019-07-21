@@ -29,18 +29,17 @@ class Scenario extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
   }
 
   render() {
     return (
-      <Card onDoubleClick={alert("Hey")}>
+      <Card>
         <CardHeader
-          /* action={
+          action={
             <IconButton onClick={this.handleClick}>
               <MoreVertIcon />
             </IconButton>
-          } */
+          }
           title={this.props.scenario.value.name}
           subheader={"Level: " + this.props.scenario.value.level}
         />
@@ -50,7 +49,7 @@ class Scenario extends Component {
           open={Boolean(this.state.anchorEl)}
           onClose={this.handleClose}
         >
-          <MenuItem onClick={this.handleEdit}>Edit</MenuItem>
+          <MenuItem onClick={this.props.editScenario}>Edit</MenuItem>
           <MenuItem onClick={this.handleDelete}>Delete</MenuItem>
         </Menu>
         <CardMedia

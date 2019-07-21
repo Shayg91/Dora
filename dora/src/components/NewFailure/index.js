@@ -13,19 +13,14 @@ import {
   Input
 } from "@material-ui/core";
 
+import { INITIAL_STATE_FAILURE } from "../../constants/initializers";
+
 class NewFailure extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: {
-        action: {
-          effect: "Smile",
-          textOrWav: "",
-          whatToPlay: ""
-        },
-        nextScenarioID: ""
-      },
+      data: props.data,
       scenarios: []
     };
 

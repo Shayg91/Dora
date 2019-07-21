@@ -4,6 +4,11 @@ import { withStyles } from "@material-ui/core/styles";
 import { withFirebase } from "../Firebase";
 
 import {
+  INITIAL_STATE_ACTION,
+  INITIAL_STATE_SCENARIO
+} from "../../constants/initializers";
+
+import {
   TextField,
   Button,
   Paper,
@@ -23,35 +28,49 @@ class NewScenario extends Component {
     super(props);
 
     this.state = {
-      key: null,
-      data: {
-        name: "",
-        level: 1,
-        actions: [],
-        waitFor: {},
-        onSuccess: {},
-        onfailure: {}
-      },
-      allActions: [
-        { key: 0, value: { effect: "Smile", textOrWav: "", whatToPlay: "" } }
-      ]
+      key: "",
+      data: { ...INITIAL_STATE_SCENARIO },
+      allActions: [{ key: 0, value: INITIAL_STATE_ACTION }],
+      scenarios: []
     };
 
-    /* if (this.props.editMode) {
+    if (props.edit) {
       let i = 0;
-      this.state.allActions = [];
-      this.state.data = this.props.data.value;
+      let actions = [];
+
       this.props.data.value.actions.forEach(x => {
-        this.state.allActions.push({ key: i, value: x });
+        actions.push({ key: i, value: x });
         i++;
       });
-    } */
+
+      this.state = {
+        key: props.data.key,
+        data: props.data.value,
+        allActions: actions
+      };
+    }
 
     console.log(this.props);
 
     this.handleFieldChange = this.handleFieldChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNewAction = this.handleNewAction.bind(this);
+
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    if (!this.props.edit) {
+      const new_key = this.props.firebase.db
+        .collection("sole_jr_comp_app_lessons")
+        .doc();
+      this.setState({ key: new_key.id });
+    }
+
+    this.props.firebase.scenarios().then(allScenarios => {
+      this.setState({
+        scenarios: allScenarios
+      });
+    });
   }
 
   render() {
@@ -88,6 +107,7 @@ class NewScenario extends Component {
                 select
                 value={this.state.data.level}
                 onChange={this.handleFieldChange("level")}
+                onBlur={this.onSubmit}
               >
                 <MenuItem key="1" value="1">
                   <StarIcon />
@@ -120,10 +140,8 @@ class NewScenario extends Component {
                 {this.state.allActions.map(x => (
                   <NewAction
                     actionNum={x.key}
-                    /* editMode={this.props.editMode} */
                     addAction={this.handleActionSubmit}
-                    ref_main={this.state.ref_main}
-                    /*  data={this.props.editMode ? x.value : ""} */
+                    data={x.value}
                   />
                 ))}
                 <Button
@@ -149,8 +167,7 @@ class NewScenario extends Component {
               <Grid item xs={8}>
                 <NewAnswer
                   addAnswer={this.handleAnswerSubmit}
-                  /* editMode={this.props.editMode}
-                  data={this.props.editMode ? this.state.data.waitFor : ""} */
+                  data={this.state.data.waitFor}
                 />
               </Grid>
             </Grid>
@@ -169,8 +186,7 @@ class NewScenario extends Component {
             <Grid item xs={8}>
               <NewSuccess
                 addSuccess={this.handleSuccessSubmit}
-                /*  editMode={this.props.editMode}
-                data={this.props.editMode ? this.state.data.onSuccess : ""} */
+                data={this.state.data.onSuccess}
               />
             </Grid>
           </Grid>
@@ -188,8 +204,7 @@ class NewScenario extends Component {
             <Grid item xs={8}>
               <NewFailure
                 addFailure={this.handleFailureSubmit}
-                /* editMode={this.props.editMode}
-                data={this.props.editMode ? this.state.data.onfailure : ""} */
+                data={this.state.data.onfailure}
               />
             </Grid>
           </Grid>
@@ -203,9 +218,9 @@ class NewScenario extends Component {
               <Button
                 color="secondary"
                 variant="contained"
-                onClick={this.handleSubmit}
+                onClick={this.closeDialog}
               >
-                Save Scenario
+                Close
               </Button>
             </Grid>
           </Grid>
@@ -225,37 +240,30 @@ class NewScenario extends Component {
     this.setState({ data });
   };
 
-  handleSubmit(event) {
-    /* if (this.props.editMode) {
-      this.state.ref_main.doc(this.props.data.key).set(this.state.data);
-      this.props.addScenario(this.props.data.key, this.state.data);
-    } else {
-      this.state.ref_main.add(this.state.data).then(function(docRef) {
-        this.props.addScenario(docRef.id, this.state.data);
-        this.setState(state => ({
-          added: !state.added,
-          add_new: !state.add_new
-        }));
-      });
-    } */
+  closeDialog = event => {
+    const { data, key } = this.state;
+    this.props.closeScenario(key, data);
 
-    const { data } = this.state;
+    event.preventDefault();
+  };
+
+  onSubmit = event => {
+    const { data, key } = this.state;
 
     const currentContext = this;
     this.props.firebase.db
       .collection("Scenarios")
-      .add(data)
+      .doc(key)
+      .set(data)
       .then(docRef => {
         console.log(currentContext);
-        currentContext.props.addNewScenario(docRef.id, data);
-        console.log("Added new Scenario: " + docRef.id);
+        currentContext.props.addNewScenario(key, data);
+        console.log("Updated Scenario: " + docRef.id);
       })
       .catch(error => {
         this.setState({ error });
       });
-
-    event.preventDefault();
-  }
+  };
 
   handleActionSubmit = (key, action) => {
     let actionsList = [...this.state.data.actions];
@@ -264,9 +272,12 @@ class NewScenario extends Component {
     } else {
       actionsList[key] = action;
     }
-    this.setState({
-      data: { ...this.state.data, actions: actionsList }
-    });
+    this.setState(
+      {
+        data: { ...this.state.data, actions: actionsList }
+      },
+      event => this.onSubmit(event)
+    );
   };
 
   handleNewAction = () => {
@@ -280,23 +291,32 @@ class NewScenario extends Component {
   };
 
   handleAnswerSubmit = answer => {
-    this.setState({
-      data: { ...this.state.data, waitFor: answer }
-    });
+    this.setState(
+      {
+        data: { ...this.state.data, waitFor: answer }
+      },
+      event => this.onSubmit(event)
+    );
     console.log("updated");
   };
 
   handleSuccessSubmit = success => {
-    this.setState({
-      data: { ...this.state.data, onSuccess: success }
-    });
+    this.setState(
+      {
+        data: { ...this.state.data, onSuccess: success }
+      },
+      event => this.onSubmit(event)
+    );
     console.log("updated");
   };
 
   handleFailureSubmit = failure => {
-    this.setState({
-      data: { ...this.state.data, onfailure: failure }
-    });
+    this.setState(
+      {
+        data: { ...this.state.data, onfailure: failure }
+      },
+      event => this.onSubmit(event)
+    );
     console.log("updated");
   };
 }
