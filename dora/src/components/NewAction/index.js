@@ -14,6 +14,8 @@ import AddIcon from "@material-ui/icons/Add";
 
 import FileUploader from "react-firebase-file-uploader";
 
+import { INITIAL_STATE_ACTION } from "../../constants/initializers";
+
 class NewAction extends Component {
   constructor(props) {
     super(props);
@@ -22,16 +24,8 @@ class NewAction extends Component {
       isUploading: false,
       progress: 0,
       key: props.actionNum,
-      data: {
-        effect: "Smile",
-        textOrWav: "",
-        whatToPlay: ""
-      }
+      data: props.data
     };
-
-    /*  if (this.props.editMode) {
-      this.state.data = this.props.data;
-    } */
 
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleUploadStart = this.handleUploadStart.bind(this);

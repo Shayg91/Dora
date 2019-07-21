@@ -13,6 +13,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { INITIAL_STATE_SIGNUP } from "../../constants/initializers";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -45,19 +46,11 @@ const SignUpPage = () => (
   </div>
 );
 
-const INITIAL_STATE = {
-  username: "",
-  email: "",
-  passwordOne: "",
-  passwordTwo: "",
-  error: null
-};
-
 class SignUpFormBase extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { ...INITIAL_STATE };
+    this.state = { ...INITIAL_STATE_SIGNUP };
     console.log(this.props.firebase);
   }
 
@@ -81,7 +74,7 @@ class SignUpFormBase extends Component {
           });
       })
       .then(() => {
-        this.setState({ ...INITIAL_STATE });
+        this.setState({ ...INITIAL_STATE_SIGNUP });
         this.props.history.push(ROUTES.LANDING);
       })
       .catch(error => {

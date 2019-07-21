@@ -6,14 +6,7 @@ class NewAction extends Component {
     super(props);
 
     this.state = {
-      data: {
-        expectedAnswer: {
-          input: "",
-          successRating: 75
-        },
-        typeOfWaiting: 1,
-        typeOfInput: "speech"
-      },
+      data: props.data,
       mulChoice: {
         correct: "",
         wrong1: "",
@@ -22,20 +15,14 @@ class NewAction extends Component {
       }
     };
 
-    /* if (this.props.editMode) {
-      this.state.data = this.props.data;
+    if (props.data.typeOfInput === "mulChoice") {
+      const mulChoiceAnswers = this.state.data.expectedAnswer.input.split(",");
 
-      if (this.state.data.typeOfInput === "mulChoice") {
-        const mulChoiceAnswers = this.state.data.expectedAnswer.input.split(
-          ","
-        );
-
-        this.state.mulChoice.correct = mulChoiceAnswers[0];
-        this.state.mulChoice.wrong1 = mulChoiceAnswers[1];
-        this.state.mulChoice.wrong2 = mulChoiceAnswers[2];
-        this.state.mulChoice.wrong3 = mulChoiceAnswers[3];
-      }
-    } */
+      this.state.mulChoice.correct = mulChoiceAnswers[0];
+      this.state.mulChoice.wrong1 = mulChoiceAnswers[1];
+      this.state.mulChoice.wrong2 = mulChoiceAnswers[2];
+      this.state.mulChoice.wrong3 = mulChoiceAnswers[3];
+    }
 
     this.handleFieldChange = this.handleFieldChange.bind(this);
   }

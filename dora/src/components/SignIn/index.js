@@ -17,6 +17,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { INITIAL_STATE_LOGIN } from "../../constants/initializers";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -49,17 +50,11 @@ const SignInPage = () => (
   </div>
 );
 
-const INITIAL_STATE = {
-  email: "",
-  password: "",
-  error: null
-};
-
 class SignInFormBase extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { ...INITIAL_STATE };
+    this.state = { ...INITIAL_STATE_LOGIN };
   }
 
   onSubmit = event => {
@@ -68,7 +63,7 @@ class SignInFormBase extends Component {
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
-        this.setState({ ...INITIAL_STATE });
+        this.setState({ ...INITIAL_STATE_LOGIN });
         this.props.history.push(ROUTES.LANDING);
       })
       .catch(error => {
