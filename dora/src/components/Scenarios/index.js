@@ -11,7 +11,13 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  Fab
+  Fab,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -55,14 +61,18 @@ class SceanriosPage extends Component {
       scenarios: [],
       selectedScenario: undefined,
       createNew: false,
-      edit: false
+      edit: false,
+      errorOpen: false
     };
 
     this.handleScenarioSelected = this.handleScenarioSelected.bind(this);
+    this.handleScenarioDelete = this.handleScenarioDelete.bind(this);
     this.handleNewScenario = this.handleNewScenario.bind(this);
     this.handleAddScenario = this.handleAddScenario.bind(this);
     this.handleScenarioEdit = this.handleScenarioEdit.bind(this);
     this.handleCloseDialog = this.handleCloseDialog.bind(this);
+    this.handleErrorOpen = this.handleErrorOpen.bind(this);
+    this.handleErrorClose = this.handleErrorClose.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +86,14 @@ class SceanriosPage extends Component {
       });
     });
   }
+
+  handleErrorOpen = () => {
+    this.setState({ errorOpen: true });
+  };
+
+  handleErrorClose = () => {
+    this.setState({ errorOpen: false });
+  };
 
   handleScenarioSelected = scenario => {
     console.log(scenario);
@@ -135,13 +153,47 @@ class SceanriosPage extends Component {
     }
   };
 
+  handleScenarioDelete = () => {
+    this.props.firebase
+      .canRemoveScenario(this.state.selectedScenario.value.name)
+      .then(returnValue => {
+        if (!returnValue) {
+          this.handleErrorOpen();
+        } else {
+          this.props.firebase
+            .removeScenario(this.state.selectedScenario.key)
+            .then(() => {
+              let scenarios = this.state.scenarios;
+              let palcement = 0;
+
+              while (palcement !== scenarios.length) {
+                if (
+                  scenarios[palcement].key === this.state.selectedScenario.key
+                ) {
+                  break;
+                } else {
+                  palcement++;
+                }
+              }
+
+              scenarios.splice(palcement, 1);
+              this.setState(state => ({
+                selectedScenario: undefined,
+                scenarios: scenarios
+              }));
+            });
+        }
+      });
+  };
+
   render() {
     const {
       scenarios,
       loading,
       selectedScenario,
       createNew,
-      edit
+      edit,
+      errorOpen
     } = this.state;
     return (
       <div>
@@ -153,12 +205,15 @@ class SceanriosPage extends Component {
             scenarios={scenarios}
             selectScenario={this.handleScenarioSelected}
             selectedScenario={selectedScenario}
+            deleteScenario={this.handleScenarioDelete}
             editScenario={this.handleScenarioEdit}
             newScenario={this.handleNewScenario}
             addScenario={this.handleAddScenario}
             createNew={createNew}
             edit={edit}
             close={this.handleCloseDialog}
+            errorOpen={errorOpen}
+            closeError={this.handleErrorClose}
           />
         )}
       </div>
@@ -170,12 +225,15 @@ const ScenariosList = ({
   scenarios,
   selectScenario,
   selectedScenario,
+  deleteScenario,
   editScenario,
   newScenario,
   addScenario,
   createNew,
   edit,
-  close
+  close,
+  errorOpen,
+  closeError
 }) => {
   const classes = useStyles();
   return (
@@ -207,7 +265,7 @@ const ScenariosList = ({
         {selectedScenario !== undefined && !createNew && !edit ? (
           <Scenario
             scenario={selectedScenario}
-            // deleteLesson={deleteLesson}
+            deleteScenario={deleteScenario}
             editScenario={editScenario}
           />
         ) : createNew || edit ? (
@@ -218,9 +276,9 @@ const ScenariosList = ({
             closeScenario={close}
           />
         ) : (
-          <Typography>No Lesson Selected</Typography>
+          <Typography>No Scenario Selected</Typography>
         )}
-        {!createNew && (
+        {!createNew && !edit && (
           <Fab
             color="secondary"
             aria-label="Edit"
@@ -230,6 +288,27 @@ const ScenariosList = ({
             <AddIcon />
           </Fab>
         )}
+        <Dialog
+          open={errorOpen}
+          onClose={closeError}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Can't Delete Scenario"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Can not Delete Scenario since it is connected to other elements.
+              Please Remove all connections, then Delete.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeError} color="primary" autoFocus>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
       </main>
     </div>
   );

@@ -28,7 +28,6 @@ class Scenario extends Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
   }
 
   render() {
@@ -50,7 +49,7 @@ class Scenario extends Component {
           onClose={this.handleClose}
         >
           <MenuItem onClick={this.props.editScenario}>Edit</MenuItem>
-          <MenuItem onClick={this.handleDelete}>Delete</MenuItem>
+          <MenuItem onClick={this.props.deleteScenario}>Delete</MenuItem>
         </Menu>
         <CardMedia
           style={imgStyle}
@@ -124,76 +123,6 @@ class Scenario extends Component {
     If connected - show message.
   - If nothing is connected - delete scenario.   
   */
-
-  handleDelete = () => {
-    // let scenariosNameToDelete = this.props.scenario.value.name;
-    // let scenarioIsConnectedToLesson = false;
-    // let scenarioIsConnectedToScenarioSuccess = false;
-    // let scenarioIsConnectedToScenarioFailiure = false;
-    // let promise1 = firebase
-    //   .firestore()
-    //   .collection("sole_jr_comp_app_lessons")
-    //   .where("scenariosInLesson", "array-contains", scenariosNameToDelete)
-    //   .get()
-    //   .then(doc => {
-    //     console.log(doc.docs.length && doc.docs[0].exists);
-    //     if (doc.docs.length && doc.docs[0].exists) {
-    //       scenarioIsConnectedToLesson = true;
-    //     }
-    //   });
-    // let promise2 = firebase
-    //   .firestore()
-    //   .collection("Scenarios")
-    //   .where("onSuccsess.nextScenarioID", "==", scenariosNameToDelete)
-    //   .get()
-    //   .then(doc => {
-    //     console.log(doc.docs.length && doc.docs[0].exists);
-    //     if (doc.docs.length && doc.docs[0].exists) {
-    //       scenarioIsConnectedToScenarioSuccess = true;
-    //     }
-    //   });
-    // let promise3 = firebase
-    //   .firestore()
-    //   .collection("Scenarios")
-    //   .where("onfailure.nextScenarioID", "==", scenariosNameToDelete)
-    //   .get()
-    //   .then(doc => {
-    //     console.log(doc.docs.length && doc.docs[0].exists);
-    //     if (doc.docs.length && doc.docs[0].exists) {
-    //       scenarioIsConnectedToScenarioFailiure = true;
-    //     }
-    //   });
-    // Promise.all([promise1, promise2, promise3]).then(e => {
-    //   console.log(
-    //     "scenarioIsConnectedToScenarioSuccess",
-    //     scenarioIsConnectedToScenarioSuccess
-    //   );
-    //   console.log(
-    //     "scenarioIsConnectedToScenarioFailiure",
-    //     scenarioIsConnectedToScenarioFailiure
-    //   );
-    //   console.log("scenarioIsConnectedToLesson", scenarioIsConnectedToLesson);
-    //   if (
-    //     !scenarioIsConnectedToScenarioSuccess &&
-    //     !scenarioIsConnectedToScenarioFailiure &&
-    //     !scenarioIsConnectedToLesson
-    //   ) {
-    //     let that = this;
-    //     firebase
-    //       .firestore()
-    //       .collection("Scenarios")
-    //       .doc(this.props.scenario.key)
-    //       .delete()
-    //       .then(function() {
-    //         console.log("Document successfully deleted!");
-    //         that.props.onDelete();
-    //       })
-    //       .catch(function(error) {
-    //         console.error("Error removing document: ", error);
-    //       });
-    //   }
-    // });
-  };
 
   handleClose = () => {
     this.setState({ anchorEl: null });

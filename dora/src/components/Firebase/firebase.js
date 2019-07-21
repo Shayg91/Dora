@@ -71,7 +71,59 @@ class Firebase {
       .delete();
   };
 
-  removeScenario = scenarioId => {};
+  canRemoveScenario = scenarioName => {
+    let scenarioIsConnectedToLesson = false;
+    let scenarioIsConnectedToScenarioSuccess = false;
+    let scenarioIsConnectedToScenarioFailiure = false;
+
+    let promise1 = this.db
+      .collection("sole_jr_comp_app_lessons")
+      .where("scenariosInLesson", "array-contains", scenarioName)
+      .get()
+      .then(doc => {
+        console.log(doc.docs.length && doc.docs[0].exists);
+        if (doc.docs.length && doc.docs[0].exists) {
+          scenarioIsConnectedToLesson = true;
+        }
+      });
+
+    let promise2 = this.db
+      .collection("Scenarios")
+      .where("onSuccsess.nextScenarioID", "==", scenarioName)
+      .get()
+      .then(doc => {
+        console.log(doc.docs.length && doc.docs[0].exists);
+        if (doc.docs.length && doc.docs[0].exists) {
+          scenarioIsConnectedToScenarioSuccess = true;
+        }
+      });
+
+    let promise3 = this.db
+      .collection("Scenarios")
+      .where("onfailure.nextScenarioID", "==", scenarioName)
+      .get()
+      .then(doc => {
+        console.log(doc.docs.length && doc.docs[0].exists);
+        if (doc.docs.length && doc.docs[0].exists) {
+          scenarioIsConnectedToScenarioFailiure = true;
+        }
+      });
+
+    return Promise.all([promise1, promise2, promise3]).then(e => {
+      return (
+        !scenarioIsConnectedToLesson &&
+        !scenarioIsConnectedToScenarioFailiure &&
+        !scenarioIsConnectedToScenarioSuccess
+      );
+    });
+  };
+
+  removeScenario = scenarioId => {
+    return this.db
+      .collection("Scenarios")
+      .doc(scenarioId)
+      .delete();
+  };
 }
 
 export default Firebase;
