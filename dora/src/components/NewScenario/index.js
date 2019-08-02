@@ -111,6 +111,7 @@ class NewScenario extends Component {
         handleSuccessSubmit={this.handleSuccessSubmit}
         handleFailureSubmit={this.handleFailureSubmit}
         finish={this.closeDialog}
+        edit={this.props.edit}
       />
     );
   }
@@ -214,7 +215,8 @@ const NewScenarioBase = ({
   handleAnswerSubmit,
   handleSuccessSubmit,
   handleFailureSubmit,
-  finish
+  finish,
+  edit
 }) => {
   const classes = useStyles();
   return (
@@ -382,7 +384,14 @@ const NewScenarioBase = ({
             </Grid>
 
             <Grid item>
-              <TextAnalyzer />
+              {edit ? (
+                <Typography variant="h6">
+                  Text To Scenario Feature is currently not available in Edit
+                  Mode
+                </Typography>
+              ) : (
+                <TextAnalyzer scenarioData={data} />
+              )}
             </Grid>
           </Grid>
         </Grid>
