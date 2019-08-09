@@ -60,3 +60,6 @@ export const INITIAL_STATE_SIGNUP = {
   passwordTwo: "",
   error: null
 };
+
+export const ROBOT_SEARCH_PRETEXT = "robot say";
+export const STUDENT_SEARCH_PRETEXT = "student say";

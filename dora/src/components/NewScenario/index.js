@@ -112,6 +112,7 @@ class NewScenario extends Component {
         handleFailureSubmit={this.handleFailureSubmit}
         finish={this.closeDialog}
         edit={this.props.edit}
+        handleConvertText={this.handleConvertText}
       />
     );
   }
@@ -203,6 +204,10 @@ class NewScenario extends Component {
       event => this.onSubmit(event)
     );
   };
+
+  handleConvertText = () => {
+    console.log("Got Here");
+  };
 }
 
 const NewScenarioBase = ({
@@ -216,9 +221,11 @@ const NewScenarioBase = ({
   handleSuccessSubmit,
   handleFailureSubmit,
   finish,
-  edit
+  edit,
+  handleConvertText
 }) => {
   const classes = useStyles();
+  console.log("handlebla", handleConvertText);
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -390,7 +397,10 @@ const NewScenarioBase = ({
                   Mode
                 </Typography>
               ) : (
-                <TextAnalyzer scenarioData={data} />
+                <TextAnalyzer
+                  scenarioData={data}
+                  handleConvert={handleConvertText}
+                />
               )}
             </Grid>
           </Grid>

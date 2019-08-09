@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { sizing } from "@material-ui/system";
 import {
   TextField,
   Grid,
@@ -15,7 +14,11 @@ import {
   Typography
 } from "@material-ui/core";
 
-import { INITIAL_STATE_ACTION } from "../../constants/initializers";
+import {
+  INITIAL_STATE_ACTION,
+  ROBOT_SEARCH_PRETEXT,
+  STUDENT_SEARCH_PRETEXT
+} from "../../constants/initializers";
 
 import InfoIcon from "@material-ui/icons/Info";
 
@@ -30,39 +33,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// This function doe a naive convertion from the text that is entered in the textbox to a scenario
-const changeFromTextToScenario = (textValue, scenario) => {
-  const words = textValue
-    .replace(",", " ")
-    .replace(".", " ")
-    .split(" ");
-  let index = 0;
-  let action = { ...INITIAL_STATE_ACTION };
+// This function does a naive convertion from the text that is entered in the textbox to a scenario
+const changeFromTextToScenario = (textValue, scenarioData) => {
+  let value = textValue.toLowerCase();
+  const valueArr = value.split("'");
+  const arr = textValue.split("'");
 
-  while (
-    index < words.length &&
-    !words[index].toLowerCase().includes("robot")
-  ) {
-    console.log(words[index]);
-    index++;
+  if (arr.length > 1 && valueArr[0].indexOf(ROBOT_SEARCH_PRETEXT) === -1) {
+    return null;
   }
 
-  index++;
+  let action = INITIAL_STATE_ACTION;
+  action.textOrWav = arr[1];
 
-  // Handles the first part of what the robot says
-  if (index < words.length && words[index].toLowerCase().includes("say")) {
-    index++;
-    while (index < words.length && !words[index].toLowerCase().includes("if")) {
-      action.textOrWav = action.textOrWav.concat(words[index], " ");
-      index++;
-      console.log(action.textOrWav);
-    }
+  scenarioData.actions = [action];
 
-    scenario.actions[0] = action;
-  }
+  console.log(scenarioData);
 };
 
-export default function TextAnalyzer(scenarioData) {
+const TextAnalyzer = (scenarioData, handleConvert) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [textValue, setValue] = useState("");
@@ -79,8 +68,15 @@ export default function TextAnalyzer(scenarioData) {
     setValue(event.target.value);
   };
 
+  const handleCopy = () => {
+    setValue(
+      "The robot says 'TEXT TO SAY', if the student says 'TEXT TO LISTEN FOR' then the robot says 'SUCCESS TEXT' and continues to scenario 'SCENARIO NAME' otherwise, the robot says 'FAILURE TEXT' and continues to scenario 'SCENARIO NAME'."
+    );
+    setOpen(false);
+  };
+  console.log("handleConvert", handleConvert);
   const handleTextToData = () => {
-    changeFromTextToScenario(textValue, scenarioData);
+    changeFromTextToScenario(textValue, scenarioData.scenarioData);
   };
 
   return (
@@ -120,6 +116,14 @@ export default function TextAnalyzer(scenarioData) {
                 </DialogContent>
                 <DialogActions>
                   <Button
+                    onClick={handleCopy}
+                    color="secondary"
+                    variant="contained"
+                    autoFocus
+                  >
+                    Copy Text
+                  </Button>
+                  <Button
                     onClick={handleClose}
                     color="primary"
                     variant="contained"
@@ -148,4 +152,6 @@ export default function TextAnalyzer(scenarioData) {
       </Paper>
     </div>
   );
-}
+};
+
+export default TextAnalyzer;
