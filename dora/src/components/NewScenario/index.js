@@ -74,10 +74,9 @@ class NewScenario extends Component {
       };
     }
 
-    console.log(this.props);
-
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleNewAction = this.handleNewAction.bind(this);
+    this.handleConvertText = this.handleConvertText.bind(this);
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -144,9 +143,7 @@ class NewScenario extends Component {
       .doc(key)
       .set(data)
       .then(docRef => {
-        console.log(currentContext);
         currentContext.props.addNewScenario(key, data);
-        console.log("Updated Scenario: " + docRef.id);
       })
       .catch(error => {
         this.setState({ error });
@@ -205,9 +202,9 @@ class NewScenario extends Component {
     );
   };
 
-  handleConvertText = () => {
-    console.log("Got Here");
-  };
+  handleConvertText(e) {
+    console.log("Got Here", e);
+  }
 }
 
 const NewScenarioBase = ({
@@ -225,7 +222,7 @@ const NewScenarioBase = ({
   handleConvertText
 }) => {
   const classes = useStyles();
-  console.log("handlebla", handleConvertText);
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>

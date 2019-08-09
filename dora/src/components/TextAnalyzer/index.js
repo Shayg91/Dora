@@ -47,11 +47,12 @@ const changeFromTextToScenario = (textValue, scenarioData) => {
   action.textOrWav = arr[1];
 
   scenarioData.actions = [action];
-
-  console.log(scenarioData);
 };
 
-const TextAnalyzer = (scenarioData, handleConvert) => {
+const TextAnalyzer = ({ scenarioData, handleConvert }) => {
+  console.log("scenarioData", scenarioData);
+  console.log("handleConvert", handleConvert);
+  handleConvert(2);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [textValue, setValue] = useState("");
@@ -74,7 +75,7 @@ const TextAnalyzer = (scenarioData, handleConvert) => {
     );
     setOpen(false);
   };
-  console.log("handleConvert", handleConvert);
+
   const handleTextToData = () => {
     changeFromTextToScenario(textValue, scenarioData.scenarioData);
   };
