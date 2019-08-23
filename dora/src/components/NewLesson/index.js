@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
+import { makeStyles } from "@material-ui/core/styles";
+import ReactEditableList from "react-editable-list";
 
 import {
   MenuItem,
@@ -20,6 +22,28 @@ import IconButton from "@material-ui/core/List";
 import DeleteIcon from "@material-ui/icons/Close";
 
 import { INITIAL_STATE_LESSON } from "../../constants/initializers";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: theme.spacing(2),
+    color: theme.palette.text.secondary
+  },
+  container: {
+    width: "50%"
+  },
+  title: {
+    padding: theme.spacing(2)
+  },
+  level: {
+    padding: theme.spacing(2)
+  },
+  innerCard: {
+    padding: theme.spacing(2)
+  }
+}));
 
 const NewLessonPage = () => (
   <div>
@@ -129,8 +153,16 @@ class NewLessonBase extends Component {
   render() {
     const { data, goalToAdd, scenarios } = this.state;
 
-    return (
-      <Paper className="new-lesson-paper">
+    return <NewLessonView data={data} scenarios={scenarios} />;
+  }
+}
+
+const NewLessonView = ({ data, scenarios, goalToAdd }) => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
         <Grid
           container
           direction="column"
@@ -150,8 +182,8 @@ class NewLessonBase extends Component {
                 label="Lesson Title"
                 fullWidth
                 value={data.title}
-                onChange={this.handleFieldChange("title")}
-                onBlur={this.onSubmit}
+                //onChange={this.handleFieldChange("title")}
+                //onBlur={this.onSubmit}
               />
             </Grid>
             <Grid item sm={10}>
@@ -160,8 +192,8 @@ class NewLessonBase extends Component {
                 label="Category"
                 fullWidth
                 value={data.category}
-                onChange={this.handleFieldChange("category")}
-                onBlur={this.onSubmit}
+                //onChange={this.handleFieldChange("category")}
+                //onBlur={this.onSubmit}
               />
             </Grid>
             <Grid
@@ -171,7 +203,7 @@ class NewLessonBase extends Component {
               alignItems="flex-end"
             >
               <Grid item sm={8}>
-                <GoalsList goals={data.goals} removeGoal={this.removeGoal} />
+                <ReactEditableList list={data.goals} />
               </Grid>
               <Grid
                 container
@@ -185,15 +217,15 @@ class NewLessonBase extends Component {
                     label="Lesson Goals"
                     fullWidth
                     value={goalToAdd}
-                    onChange={this.handleGoalChanged("goalToAdd")}
-                    onBlur={this.onSubmit}
+                    //onChange={this.handleGoalChanged("goalToAdd")}
+                    //onBlur={this.onSubmit}
                   />
                 </Grid>
                 <Grid item sm={2}>
                   <Button
                     color="secondary"
                     variant="contained"
-                    onClick={this.handleSubmitGoal}
+                    //onClick={this.handleSubmitGoal}
                   >
                     Add Goal
                   </Button>
@@ -208,7 +240,7 @@ class NewLessonBase extends Component {
                 <Select
                   multiple
                   value={data.scenariosInLesson}
-                  onChange={this.handleChange}
+                  //onChange={this.handleChange}
                   input={<Input id="select-multiple" />}
                 >
                   {scenarios.map(doc => (
@@ -230,7 +262,7 @@ class NewLessonBase extends Component {
               <Button
                 color="secondary"
                 variant="contained"
-                onClick={this.closeDialog}
+                //onClick={this.closeDialog}
               >
                 Close
               </Button>
@@ -238,9 +270,9 @@ class NewLessonBase extends Component {
           </Grid>
         </Grid>
       </Paper>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const GoalsList = ({ goals }) => {
   return (
