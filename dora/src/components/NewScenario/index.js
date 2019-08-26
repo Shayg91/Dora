@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { withFirebase } from "../Firebase";
 
@@ -14,14 +14,38 @@ import {
   Paper,
   Grid,
   MenuItem,
-  Typography
+  Typography,
+  Select
 } from "@material-ui/core";
 import StarIcon from "@material-ui/icons/Star";
 
 import NewAction from "../NewAction";
 import NewSuccess from "../NewSuccess";
 import NewAnswer from "../NewAnswer";
-import NewFailure from "../NewFailure";
+
+import TextAnalyzer from "../TextAnalyzer";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: theme.spacing(2),
+    color: theme.palette.text.secondary
+  },
+  container: {
+    width: "50%"
+  },
+  title: {
+    padding: theme.spacing(2)
+  },
+  level: {
+    padding: theme.spacing(2)
+  },
+  innerCard: {
+    padding: theme.spacing(2)
+  }
+}));
 
 class NewScenario extends Component {
   constructor(props) {
@@ -50,10 +74,9 @@ class NewScenario extends Component {
       };
     }
 
-    console.log(this.props);
-
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleNewAction = this.handleNewAction.bind(this);
+    this.handleConvertText = this.handleConvertText.bind(this);
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -74,158 +97,23 @@ class NewScenario extends Component {
   }
 
   render() {
+    const { key, data, allActions, scenarios } = this.state;
     return (
-      <Paper className="new-scenario-paper">
-        <Grid
-          container
-          direction="column"
-          justify="center"
-          alignItems="flex-start"
-        >
-          <Grid
-            className="title-block"
-            direction="row"
-            container
-            justify="flex-start"
-            alignItems="flex-end"
-          >
-            <Grid item sm={6}>
-              <TextField
-                className="title"
-                id="name"
-                label="Title"
-                value={this.state.data.name}
-                onChange={this.handleFieldChange("name")}
-                onBlur={this.onSubmit}
-              />
-            </Grid>
-            <Grid item sm={6}>
-              <TextField
-                className="level"
-                id="level"
-                label="Level"
-                select
-                value={this.state.data.level}
-                onChange={this.handleFieldChange("level")}
-                onBlur={this.onSubmit}
-              >
-                <MenuItem key="1" value="1">
-                  <StarIcon />
-                </MenuItem>
-                <MenuItem key="2" value="2">
-                  <StarIcon />
-                  <StarIcon />
-                </MenuItem>
-                <MenuItem key="3" value="3">
-                  <StarIcon />
-                  <StarIcon />
-                  <StarIcon />
-                </MenuItem>
-              </TextField>
-            </Grid>
-          </Grid>
-          <Grid container direction="row" alignContent="flex-start">
-            <Grid
-              container
-              direction="column"
-              justify="flex-start"
-              alignItems="flex-start"
-            >
-              <Grid item className="sub-titles">
-                <Typography variant="subtitle2" gutterBottom>
-                  Question Info:
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                {this.state.allActions.map(x => (
-                  <NewAction
-                    actionNum={x.key}
-                    addAction={this.handleActionSubmit}
-                    data={x.value}
-                  />
-                ))}
-                <Button
-                  onClick={this.handleNewAction}
-                  color="secondary"
-                  variant="text"
-                >
-                  Add New Action
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="column"
-              justify="flex-start"
-              alignItems="flex-start"
-            >
-              <Grid item className="sub-titles">
-                <Typography variant="subtitle2" gutterBottom>
-                  Answer Info:
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <NewAnswer
-                  addAnswer={this.handleAnswerSubmit}
-                  data={this.state.data.waitFor}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="flex-start"
-          >
-            <Grid item className="sub-titles">
-              <Typography variant="subtitle2" gutterBottom>
-                What should happen when there is a correct answer:
-              </Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <NewSuccess
-                addSuccess={this.handleSuccessSubmit}
-                data={this.state.data.onSuccess}
-              />
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="flex-start"
-          >
-            <Grid item className="sub-titles">
-              <Typography variant="subtitle2" gutterBottom>
-                What should happen when there is an incorrect answer:
-              </Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <NewFailure
-                addFailure={this.handleFailureSubmit}
-                data={this.state.data.onfailure}
-              />
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="flex-end"
-          >
-            <Grid item>
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={this.closeDialog}
-              >
-                Close
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Paper>
+      <NewScenarioBase
+        data={data}
+        actions={allActions}
+        handleFieldChange={this.handleFieldChange}
+        submit={this.onSubmit}
+        submitAction={this.handleActionSubmit}
+        handleNewAction={this.handleNewAction}
+        handleAnswerSubmit={this.handleAnswerSubmit}
+        handleSuccessSubmit={this.handleSuccessSubmit}
+        handleFailureSubmit={this.handleFailureSubmit}
+        finish={this.closeDialog}
+        edit={this.props.edit}
+        handleConvertText={this.handleConvertText}
+        allScenarios={scenarios}
+      />
     );
   }
 
@@ -256,9 +144,7 @@ class NewScenario extends Component {
       .doc(key)
       .set(data)
       .then(docRef => {
-        console.log(currentContext);
         currentContext.props.addNewScenario(key, data);
-        console.log("Updated Scenario: " + docRef.id);
       })
       .catch(error => {
         this.setState({ error });
@@ -297,7 +183,6 @@ class NewScenario extends Component {
       },
       event => this.onSubmit(event)
     );
-    console.log("updated");
   };
 
   handleSuccessSubmit = success => {
@@ -307,7 +192,6 @@ class NewScenario extends Component {
       },
       event => this.onSubmit(event)
     );
-    console.log("updated");
   };
 
   handleFailureSubmit = failure => {
@@ -317,8 +201,215 @@ class NewScenario extends Component {
       },
       event => this.onSubmit(event)
     );
-    console.log("updated");
   };
+
+  handleConvertText(e) {
+    this.setState({
+      data: e
+    });
+  }
 }
+
+const NewScenarioBase = ({
+  data,
+  actions,
+  handleFieldChange,
+  submit,
+  submitAction,
+  handleNewAction,
+  handleAnswerSubmit,
+  handleSuccessSubmit,
+  handleFailureSubmit,
+  finish,
+  edit,
+  handleConvertText,
+  allScenarios
+}) => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <Grid
+          container
+          direction="row"
+          justify="space-evenly"
+          alignItems="flex-start"
+        >
+          <Grid
+            container
+            direction="column"
+            justify="space-evenly"
+            alignItems="flex-start"
+            className={classes.container}
+          >
+            <Grid
+              container
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+            >
+              <Grid item style={{ display: "flex", margin: 20 }}>
+                <TextField
+                  id="name"
+                  label="Title"
+                  value={data.name}
+                  onChange={handleFieldChange("name")}
+                  onBlur={submit}
+                  style={{ flex: 1, width: 360 }}
+                />
+                <Select
+                  id="level"
+                  label="Level"
+                  value={data.level}
+                  onChange={handleFieldChange("level")}
+                  onBlur={submit}
+                  style={{ alignSelf: "flex-end", marginLeft: 20, width: 150 }}
+                >
+                  <MenuItem key="1" value="1">
+                    <StarIcon />
+                  </MenuItem>
+                  <MenuItem key="2" value="2">
+                    <StarIcon />
+                    <StarIcon />
+                  </MenuItem>
+                  <MenuItem key="3" value="3">
+                    <StarIcon />
+                    <StarIcon />
+                    <StarIcon />
+                  </MenuItem>
+                </Select>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              direction="column"
+              justify="space-evenly"
+              alignItems="flex-start"
+            >
+              <Grid item>
+                <Typography variant="subtitle1" gutterBottom>
+                  Question Info:
+                </Typography>
+              </Grid>
+
+              <Grid container direction="row">
+                <Grid item className={classes.innerCard}>
+                  {actions.map(x => (
+                    <NewAction
+                      actionNum={x.key}
+                      addAction={submitAction}
+                      data={x.value}
+                    />
+                  ))}
+                </Grid>
+              </Grid>
+
+              <Grid item>
+                <Button
+                  onClick={handleNewAction}
+                  color="secondary"
+                  variant="text"
+                >
+                  Add New Action
+                </Button>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              direction="column"
+              justify="space-evenly"
+              alignItems="flex-start"
+            >
+              <Grid item>
+                <Typography variant="subtitle1" gutterBottom>
+                  Answer Info:
+                </Typography>
+              </Grid>
+              <Grid item className={classes.innerCard}>
+                <NewAnswer addAnswer={handleAnswerSubmit} data={data.waitFor} />
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              direction="column"
+              justify="space-evenly"
+              alignItems="flex-start"
+            >
+              <Grid item>
+                <Typography variant="subtitle1" gutterBottom>
+                  What Should happen if the student answers correctly?:
+                </Typography>
+              </Grid>
+              <Grid item className={classes.innerCard}>
+                <NewSuccess
+                  addSuccess={handleSuccessSubmit}
+                  data={data.onSuccess}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              direction="column"
+              justify="space-evenly"
+              alignItems="flex-start"
+            >
+              <Grid item>
+                <Typography variant="subtitle1" gutterBottom>
+                  What Should happen if the student answers incorrectly?:
+                </Typography>
+              </Grid>
+              <Grid item className={classes.innerCard}>
+                <NewSuccess
+                  addSuccess={handleFailureSubmit}
+                  data={data.onfailure}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            className={classes.container}
+          >
+            <Grid
+              container
+              direction="column"
+              justify="flex-end"
+              alignItems="flex-end"
+            >
+              <Grid item>
+                <Button onClick={finish} color="secondary" variant="text">
+                  Finish
+                </Button>
+              </Grid>
+            </Grid>
+
+            <Grid item>
+              {edit ? (
+                <Typography variant="h6">
+                  Text To Scenario Feature is currently not available in Edit
+                  Mode
+                </Typography>
+              ) : (
+                <TextAnalyzer
+                  scenarioData={data}
+                  handleConvert={handleConvertText}
+                  allScenarios={allScenarios}
+                />
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Paper>
+    </div>
+  );
+};
 
 export default withFirebase(NewScenario);

@@ -1,5 +1,19 @@
 import React, { Component } from "react";
 import { TextField, MenuItem, Grid, Paper } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: theme.spacing(2),
+    color: theme.palette.text.secondary,
+    marginBottom: theme.spacing(2),
+    width: 400
+  },
+  container: { width: 200 }
+}));
 
 class NewAction extends Component {
   constructor(props) {
@@ -28,117 +42,16 @@ class NewAction extends Component {
   }
 
   render() {
+    const { data, mulChoice } = this.state;
+
     return (
-      <Paper className="new-answer">
-        <Grid
-          container
-          direction="column"
-          justify="center"
-          alignItems="flex-start"
-        >
-          <Grid
-            direction="row"
-            container
-            justify="flex-start"
-            alignItems="flex-end"
-          >
-            <Grid item xs={12}>
-              <TextField
-                id="typeOfInput"
-                label="Type of Input"
-                select
-                fullWidth
-                value={this.state.data.typeOfInput}
-                onChange={this.handleFieldChange("typeOfInput")}
-                onBlur={this.handleSubmit}
-              >
-                <MenuItem key="1" value="inputText">
-                  Type 1 - Text
-                </MenuItem>
-                <MenuItem key="2" value="speech">
-                  Type 2 - Speech
-                </MenuItem>
-                <MenuItem key="3" value="mulChoice">
-                  Type 3 - Multipule Choice Answer
-                </MenuItem>
-              </TextField>
-            </Grid>
-            {this.state.data.typeOfInput != "mulChoice" ? (
-              <Grid item xs={12}>
-                <TextField
-                  id="answer"
-                  fullWidth
-                  multiline
-                  label="Answer"
-                  value={this.state.data.expectedAnswer.input}
-                  onChange={this.handleFieldChange("input", true)}
-                  onBlur={this.handleSubmit}
-                />
-              </Grid>
-            ) : (
-              <Grid item xs={12}>
-                <TextField
-                  id="answer"
-                  fullWidth
-                  multiline
-                  label="Correct Answer"
-                  value={this.state.mulChoice.correct}
-                  onChange={this.handleMultiAnswerFieldChange("correct")}
-                  onBlur={this.handleSubmit}
-                />
-
-                <TextField
-                  id="answer"
-                  fullWidth
-                  multiline
-                  label="Wrong Answer 1"
-                  value={this.state.mulChoice.wrong1}
-                  onChange={this.handleMultiAnswerFieldChange("wrong1")}
-                  onBlur={this.handleSubmit}
-                />
-                <TextField
-                  id="answer"
-                  fullWidth
-                  multiline
-                  label="Wrong Answer 2"
-                  value={this.state.mulChoice.wrong2}
-                  onChange={this.handleMultiAnswerFieldChange("wrong2")}
-                  onBlur={this.handleSubmit}
-                />
-                <TextField
-                  id="answer"
-                  fullWidth
-                  multiline
-                  label="Wrong Answer 3"
-                  value={this.state.mulChoice.wrong3}
-                  onChange={this.handleMultiAnswerFieldChange("wrong3")}
-                  onBlur={this.handleSubmit}
-                />
-              </Grid>
-            )}
-
-            {this.state.data.typeOfInput != "mulChoice" ? (
-              <Grid
-                container
-                direction="row"
-                justify="space-between"
-                alignItems="center"
-              >
-                <Grid item xs={6}>
-                  <TextField
-                    id="successRating"
-                    type="number"
-                    label="Success Rating"
-                    value={this.state.data.expectedAnswer.successRating}
-                    onChange={this.handleFieldChange("successRating", true)}
-                    onBlur={this.handleSubmit}
-                  />
-                </Grid>
-              </Grid>
-            ) : null}
-          </Grid>
-        </Grid>
-      </Paper>
+      <Answer
+        data={data}
+        mulChoice={mulChoice}
+        handleFieldChange={this.handleFieldChange}
+        handleMultiAnswerFieldChange={this.handleMultiAnswerFieldChange}
+        handleSubmit={this.handleSubmit}
+      />
     );
   }
 
@@ -175,5 +88,127 @@ class NewAction extends Component {
     event.preventDefault();
   };
 }
+
+const Answer = ({
+  data,
+  mulChoice,
+  handleFieldChange,
+  handleMultiAnswerFieldChange,
+  handleSubmit
+}) => {
+  const classes = useStyles();
+  return (
+    <Paper className={classes.paper}>
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        alignItems="flex-start"
+      >
+        <Grid
+          direction="row"
+          container
+          justify="flex-start"
+          alignItems="flex-end"
+        >
+          <Grid item xs={12}>
+            <TextField
+              id="typeOfInput"
+              label="Type of Input"
+              select
+              fullWidth
+              value={data.typeOfInput}
+              onChange={handleFieldChange("typeOfInput")}
+              onBlur={handleSubmit}
+            >
+              <MenuItem key="1" value="inputText">
+                Type 1 - Text
+              </MenuItem>
+              <MenuItem key="2" value="speech">
+                Type 2 - Speech
+              </MenuItem>
+              <MenuItem key="3" value="mulChoice">
+                Type 3 - Multipule Choice Answer
+              </MenuItem>
+            </TextField>
+          </Grid>
+          {data.typeOfInput != "mulChoice" ? (
+            <Grid item xs={12}>
+              <TextField
+                id="answer"
+                fullWidth
+                multiline
+                label="Answer"
+                value={data.expectedAnswer.input}
+                onChange={handleFieldChange("input", true)}
+                onBlur={handleSubmit}
+              />
+            </Grid>
+          ) : (
+            <Grid item xs={12}>
+              <TextField
+                id="answer"
+                fullWidth
+                multiline
+                label="Correct Answer"
+                value={mulChoice.correct}
+                onChange={handleMultiAnswerFieldChange("correct")}
+                onBlur={handleSubmit}
+              />
+
+              <TextField
+                id="answer"
+                fullWidth
+                multiline
+                label="Wrong Answer 1"
+                value={mulChoice.wrong1}
+                onChange={handleMultiAnswerFieldChange("wrong1")}
+                onBlur={handleSubmit}
+              />
+              <TextField
+                id="answer"
+                fullWidth
+                multiline
+                label="Wrong Answer 2"
+                value={mulChoice.wrong2}
+                onChange={handleMultiAnswerFieldChange("wrong2")}
+                onBlur={handleSubmit}
+              />
+              <TextField
+                id="answer"
+                fullWidth
+                multiline
+                label="Wrong Answer 3"
+                value={mulChoice.wrong3}
+                onChange={handleMultiAnswerFieldChange("wrong3")}
+                onBlur={handleSubmit}
+              />
+            </Grid>
+          )}
+
+          {data.typeOfInput != "mulChoice" ? (
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Grid item xs={6}>
+                <TextField
+                  id="successRating"
+                  type="number"
+                  label="Success Rating"
+                  value={data.expectedAnswer.successRating}
+                  onChange={handleFieldChange("successRating", true)}
+                  onBlur={handleSubmit}
+                />
+              </Grid>
+            </Grid>
+          ) : null}
+        </Grid>
+      </Grid>
+    </Paper>
+  );
+};
 
 export default NewAction;

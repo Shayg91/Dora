@@ -53,7 +53,11 @@ class Scenario extends Component {
         </Menu>
         <CardMedia
           style={imgStyle}
-          image={this.props.scenario.value.actions[0].whatToPlay}
+          image={
+            this.props.scenario.value.actions[0]
+              ? this.props.scenario.value.actions[0].whatToPlay
+              : null
+          }
         />
         <CardContent>
           <Typography variant="h6">
