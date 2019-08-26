@@ -97,7 +97,7 @@ class NewScenario extends Component {
   }
 
   render() {
-    const { key, data, allActions } = this.state;
+    const { key, data, allActions, scenarios } = this.state;
     return (
       <NewScenarioBase
         data={data}
@@ -112,6 +112,7 @@ class NewScenario extends Component {
         finish={this.closeDialog}
         edit={this.props.edit}
         handleConvertText={this.handleConvertText}
+        allScenarios={scenarios}
       />
     );
   }
@@ -203,7 +204,9 @@ class NewScenario extends Component {
   };
 
   handleConvertText(e) {
-    console.log("Got Here", e);
+    this.setState({
+      data: e
+    });
   }
 }
 
@@ -219,7 +222,8 @@ const NewScenarioBase = ({
   handleFailureSubmit,
   finish,
   edit,
-  handleConvertText
+  handleConvertText,
+  allScenarios
 }) => {
   const classes = useStyles();
 
@@ -397,6 +401,7 @@ const NewScenarioBase = ({
                 <TextAnalyzer
                   scenarioData={data}
                   handleConvert={handleConvertText}
+                  allScenarios={allScenarios}
                 />
               )}
             </Grid>

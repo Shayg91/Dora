@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // This function does a naive convertion from the text that is entered in the textbox to a scenario
-const changeFromTextToScenario = (textValue, scenarioData) => {
+const changeFromTextToScenario = (textValue, scenarioData, allScenarios) => {
   let value = textValue.toLowerCase();
   const valueArr = value.split("'");
   const arr = textValue.split("'");
@@ -47,15 +47,39 @@ const changeFromTextToScenario = (textValue, scenarioData) => {
   action.textOrWav = arr[1];
 
   scenarioData.actions = [action];
+  scenarioData.waitFor.expectedAnswer.input = arr[3];
+  scenarioData.onSuccess.action.textOrWav = arr[5];
+  scenarioData.onfailure.action.textOrWav = arr[9];
+
+  const scenarioSuccess = allScenarios.filter(
+    data => data.value.name.toLowerCase() === valueArr[7]
+  );
+
+  if (scenarioSuccess.length > 0) {
+    scenarioData.onSuccess.nextScenarioID = scenarioSuccess[0].value.name;
+  } else {
+    return "Success Scenario Name doesn't exist. Please make sure you typed the name in correctly.";
+  }
+
+  const scenarioFailure = allScenarios.filter(
+    data => data.value.name.toLowerCase() === valueArr[11]
+  );
+
+  if (scenarioFailure.length > 0) {
+    scenarioData.onfailure.nextScenarioID = scenarioFailure[0].value.name;
+  } else {
+    return "Failure Scenario Name doesn't exist. Please make sure you typed the name in correctly.";
+  }
+
+  return "";
 };
 
-const TextAnalyzer = ({ scenarioData, handleConvert }) => {
-  console.log("scenarioData", scenarioData);
-  console.log("handleConvert", handleConvert);
-  handleConvert(2);
+const TextAnalyzer = ({ scenarioData, handleConvert, allScenarios }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [textValue, setValue] = useState("");
+  const [errorMessage, setError] = useState("");
+  const [errorState, handleError] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -77,7 +101,21 @@ const TextAnalyzer = ({ scenarioData, handleConvert }) => {
   };
 
   const handleTextToData = () => {
-    changeFromTextToScenario(textValue, scenarioData.scenarioData);
+    const errorMessage = changeFromTextToScenario(
+      textValue,
+      scenarioData,
+      allScenarios
+    );
+
+    if (errorMessage === "") {
+      handleError(false);
+    } else {
+      handleError(true);
+    }
+
+    setError(errorMessage);
+
+    handleConvert(scenarioData);
   };
 
   return (
@@ -146,6 +184,8 @@ const TextAnalyzer = ({ scenarioData, handleConvert }) => {
                 onChange={handleFieldChanged}
                 onBlur={handleTextToData}
                 placeholder="Start writing the Scenario..."
+                helperText={errorMessage}
+                error={errorState}
               />
             </Grid>
           </Grid>
