@@ -15,13 +15,16 @@ import {
   InputLabel,
   Input,
   Paper,
-  TextField
+  TextField,
+  Typography
 } from "@material-ui/core";
 
 import IconButton from "@material-ui/core/List";
 import DeleteIcon from "@material-ui/icons/Close";
 
 import { INITIAL_STATE_LESSON } from "../../constants/initializers";
+
+import "./style.css";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,14 +37,16 @@ const useStyles = makeStyles(theme => ({
   container: {
     width: "50%"
   },
-  title: {
-    padding: theme.spacing(2)
+  goals: {
+    paddingTop: theme.spacing(2)
   },
-  level: {
-    padding: theme.spacing(2)
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200
   },
-  innerCard: {
-    padding: theme.spacing(2)
+  menu: {
+    width: 200
   }
 }));
 
@@ -58,20 +63,19 @@ class NewLessonBase extends Component {
     this.state = {
       data: { ...INITIAL_STATE_LESSON },
       scenarios: [],
-      goalToAdd: "",
       key: ""
     };
 
     this.onSubmit = this.onSubmit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
-    this.handleSubmitGoal = this.handleSubmitGoal.bind(this);
-    this.removeGoal = this.removeGoal.bind(this);
+    this.handleGoalChanged = this.handleGoalChanged.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
     if (this.props.edit) {
       this.setState({ data: this.props.data.value, key: this.props.data.key });
+      console.log(this.props.data.value);
     } else {
       const new_key = this.props.firebase.db
         .collection("sole_jr_comp_app_lessons")
@@ -86,17 +90,10 @@ class NewLessonBase extends Component {
     });
   }
 
-  handleSubmitGoal = event => {
-    let goalsList = [...this.state.data.goals];
-    goalsList.push(this.state.goalToAdd);
+  handleGoalChanged = list => {
     this.setState({
-      data: { ...this.state.data, goals: goalsList },
-      goalToAdd: ""
+      data: { ...this.state.data, goals: list }
     });
-  };
-
-  handleGoalChanged = field => event => {
-    this.setState({ goalToAdd: event.target.value }, this.onSubmit(event));
   };
 
   handleFieldChange = field => event => {
@@ -105,23 +102,15 @@ class NewLessonBase extends Component {
     this.setState({ data });
   };
 
-  removeGoal = goal_index => {
-    console.log("imhere", goal_index);
-    let goalsList = this.state.data.goals;
-
-    this.setState({
-      data: { ...this.state.data, goals: goalsList.splice(goal_index + 1, 1) }
-    });
-  };
-
-  handleChange(event) {
+  handleChange = place => event => {
     let data = this.state.data;
-    data.scenariosInLesson = event.target.value;
+
+    data.scenariosInLesson[place] = event.target.value;
 
     this.setState(state => ({
       data: data
     }));
-  }
+  };
 
   closeDialog = event => {
     const { data, key } = this.state;
@@ -151,149 +140,224 @@ class NewLessonBase extends Component {
   };
 
   render() {
-    const { data, goalToAdd, scenarios } = this.state;
+    const { data, scenarios } = this.state;
 
-    return <NewLessonView data={data} scenarios={scenarios} />;
+    return (
+      <NewLessonView
+        data={data}
+        scenarios={scenarios}
+        closeDialog={this.closeDialog}
+        handleGoalChanged={this.handleGoalChanged}
+        handleFieldChange={this.handleFieldChange}
+        handleScenarioChanged={this.handleChange}
+        submit={this.onSubmit}
+      />
+    );
   }
 }
 
-const NewLessonView = ({ data, scenarios, goalToAdd }) => {
+const NewLessonView = ({
+  data,
+  scenarios,
+  handleGoalChanged,
+  closeDialog,
+  handleFieldChange,
+  handleScenarioChanged,
+  submit
+}) => {
   const classes = useStyles();
+  let scenario1 = data.scenariosInLesson[0] ? data.scenariosInLesson[0] : null,
+    scenario2 = data.scenariosInLesson[1] ? data.scenariosInLesson[1] : null,
+    scenario3 = data.scenariosInLesson[2] ? data.scenariosInLesson[2] : null,
+    scenario4 = data.scenariosInLesson[3] ? data.scenariosInLesson[3] : null,
+    scenario5 = data.scenariosInLesson[4] ? data.scenariosInLesson[4] : null;
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Grid
           container
-          direction="column"
-          justify="center"
+          direction="row"
+          justify="space-evenly"
           alignItems="flex-start"
         >
           <Grid
-            className="title-block"
-            direction="row"
             container
-            justify="flex-start"
-            alignItems="flex-end"
+            direction="column"
+            justify="space-evenly"
+            alignItems="flex-start"
+            className={classes.container}
           >
-            <Grid item sm={10}>
-              <TextField
-                id="title"
-                label="Lesson Title"
-                fullWidth
-                value={data.title}
-                //onChange={this.handleFieldChange("title")}
-                //onBlur={this.onSubmit}
-              />
-            </Grid>
-            <Grid item sm={10}>
-              <TextField
-                id="category"
-                label="Category"
-                fullWidth
-                value={data.category}
-                //onChange={this.handleFieldChange("category")}
-                //onBlur={this.onSubmit}
-              />
-            </Grid>
-            <Grid
-              direction="row"
-              container
-              justify="flex-start"
-              alignItems="flex-end"
-            >
-              <Grid item sm={8}>
-                <ReactEditableList list={data.goals} />
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justify="flex-start"
-                alignItems="center"
-              >
-                <Grid item sm={8}>
-                  <TextField
-                    id="goals"
-                    label="Lesson Goals"
-                    fullWidth
-                    value={goalToAdd}
-                    //onChange={this.handleGoalChanged("goalToAdd")}
-                    //onBlur={this.onSubmit}
-                  />
-                </Grid>
-                <Grid item sm={2}>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    //onClick={this.handleSubmitGoal}
-                  >
-                    Add Goal
-                  </Button>
-                </Grid>
+            <Grid container>
+              <Grid item sm={12}>
+                <TextField
+                  id="title"
+                  label="Lesson Title"
+                  fullWidth
+                  value={data.title}
+                  onChange={handleFieldChange("title")}
+                  onBlur={submit}
+                />
               </Grid>
             </Grid>
-            <Grid item sm={8}>
-              <FormControl>
-                <InputLabel htmlFor="select-multiple">
-                  Scenarios in Lesson
-                </InputLabel>
-                <Select
-                  multiple
-                  value={data.scenariosInLesson}
-                  //onChange={this.handleChange}
-                  input={<Input id="select-multiple" />}
+
+            <Grid container>
+              <Grid item sm={12}>
+                <TextField
+                  id="category"
+                  label="Category"
+                  fullWidth
+                  value={data.category}
+                  onChange={handleFieldChange("category")}
+                  onBlur={submit}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container>
+              <Grid item sm={12} className={classes.goals}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Lesson Goals:
+                </Typography>
+                <Typography variant="subtitle2" gutterBottom>
+                  Press the ADD Button to add a new Goal to this Lesson
+                </Typography>
+                <ReactEditableList
+                  list={data.goals}
+                  onListUpdated={handleGoalChanged}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container>
+              <Grid item sm={12} className={classes.goals}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Scenarios in Lesson:
+                </Typography>
+                <Typography variant="subtitle2" gutterBottom>
+                  You can choose up to 5 Starting Scenarios. The scenarios will
+                  be played out one after another - with nested scenarios played
+                  first.
+                </Typography>
+                <TextField
+                  id="scenario-select"
+                  select
+                  label="First Scenario"
+                  className={classes.textField}
+                  value={scenario1}
+                  onChange={handleScenarioChanged(0)}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  margin="normal"
                 >
-                  {scenarios.map(doc => (
-                    <MenuItem key={doc.key} value={doc.value.name}>
-                      {doc.value.name}
+                  {scenarios.map(option => (
+                    <MenuItem key={option.key} value={option.value.name}>
+                      {option.value.name}
                     </MenuItem>
                   ))}
-                </Select>
-              </FormControl>
+                </TextField>
+                <TextField
+                  id="scenario-select"
+                  select
+                  label="Second Scenario"
+                  className={classes.textField}
+                  value={scenario2}
+                  onChange={handleScenarioChanged(1)}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  margin="normal"
+                >
+                  {scenarios.map(option => (
+                    <MenuItem key={option.key} value={option.value.name}>
+                      {option.value.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  id="scenario-select"
+                  select
+                  label="Third Scenario"
+                  className={classes.textField}
+                  value={scenario3}
+                  onChange={handleScenarioChanged(2)}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  margin="normal"
+                >
+                  {scenarios.map(option => (
+                    <MenuItem key={option.key} value={option.value.name}>
+                      {option.value.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  id="scenario-select"
+                  select
+                  label="Fourth Scenario"
+                  className={classes.textField}
+                  value={scenario4}
+                  onChange={handleScenarioChanged(3)}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  margin="normal"
+                >
+                  {scenarios.map(option => (
+                    <MenuItem key={option.key} value={option.value.name}>
+                      {option.value.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  id="scenario-select"
+                  select
+                  label="Fifth Scenario"
+                  className={classes.textField}
+                  value={scenario5}
+                  onChange={handleScenarioChanged(4)}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  margin="normal"
+                >
+                  {scenarios.map(option => (
+                    <MenuItem key={option.key} value={option.value.name}>
+                      {option.value.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
             </Grid>
           </Grid>
+
           <Grid
             container
             direction="column"
-            justify="center"
+            justify="flex-end"
             alignItems="flex-end"
+            className={classes.container}
           >
             <Grid item>
-              <Button
-                color="secondary"
-                variant="contained"
-                //onClick={this.closeDialog}
-              >
-                Close
+              <Button color="secondary" variant="text" onClick={closeDialog}>
+                Finish
               </Button>
             </Grid>
           </Grid>
         </Grid>
       </Paper>
-    </div>
-  );
-};
-
-const GoalsList = ({ goals }) => {
-  return (
-    <div>
-      <List>
-        {goals.map((goal, i) => (
-          <ListItem key={i}>
-            <div>{goal}</div>
-            <ListItemSecondaryAction>
-              <IconButton
-                aria-label="Delete"
-                /* onClick={e => {
-                  removeGoal(i);
-                }} */
-              >
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
     </div>
   );
 };
