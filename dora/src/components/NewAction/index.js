@@ -152,7 +152,9 @@ const Action = ({
             alignItems="flex-start"
           >
             <Grid item xs={8}>
-              <img src={data.whatToPlay} className={classes.img} />
+              {data.whatToPlay && (
+                <img src={data.whatToPlay} className={classes.img} />
+              )}
               <TextField
                 disabled
                 id="effect"

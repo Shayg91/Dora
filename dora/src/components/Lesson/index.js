@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { INITIAL_STATE_LESSON } from "../../constants/initializers";
 
 class Lesson extends Component {
   constructor(props) {
@@ -32,7 +31,7 @@ class Lesson extends Component {
             </IconButton>
           }
           title={this.props.lesson.value.title}
-          subheader={this.props.lesson.category}
+          subheader={this.props.lesson.value.category}
         />
         <Menu
           id="simple-menu"
@@ -47,7 +46,7 @@ class Lesson extends Component {
           <Typography component="p">
             Goals:
             <ol>
-              {this.props.lessons.value.goals &&
+              {this.props.lesson.value.goals &&
                 this.props.lesson.value.goals.map(listItem => (
                   <li>{listItem}</li>
                 ))}
