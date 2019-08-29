@@ -77,7 +77,9 @@ const changeFromTextToScenario = (textValue, scenarioData, allScenarios) => {
 const TextAnalyzer = ({ scenarioData, handleConvert, allScenarios }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [textValue, setValue] = useState("");
+  const [textValue, setValue] = useState(
+    "The robot says 'TEXT TO SAY', if the student says 'TEXT TO LISTEN FOR' then the robot says 'SUCCESS TEXT' and continues to scenario 'SCENARIO NAME' otherwise, the robot says 'FAILURE TEXT' and continues to scenario 'SCENARIO NAME'."
+  );
   const [errorMessage, setError] = useState("");
   const [errorState, handleError] = useState(false);
 

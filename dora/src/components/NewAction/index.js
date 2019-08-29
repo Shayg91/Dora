@@ -25,6 +25,10 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(2),
     width: 400
+  },
+  img: {
+    width: 100,
+    height: 100
   }
 }));
 
@@ -148,6 +152,7 @@ const Action = ({
             alignItems="flex-start"
           >
             <Grid item xs={8}>
+              <img src={data.whatToPlay} className={classes.img} />
               <TextField
                 disabled
                 id="effect"

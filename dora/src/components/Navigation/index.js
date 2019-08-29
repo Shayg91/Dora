@@ -43,7 +43,7 @@ const NavigationNonAuth = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Dora - The Learning Robot
+            Dora - The Teaching Robot
           </Typography>
           <Link
             component="button"
@@ -74,7 +74,7 @@ const NavigationAuth = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Dora - The Learning Robot
+            Dora - The Teaching Robot
           </Typography>
           <Link
             component="button"

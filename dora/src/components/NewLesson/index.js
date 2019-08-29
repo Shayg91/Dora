@@ -66,6 +66,10 @@ class NewLessonBase extends Component {
       key: ""
     };
 
+    if (this.props.edit) {
+      this.state.data = this.props.data.value;
+    }
+
     this.onSubmit = this.onSubmit.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleGoalChanged = this.handleGoalChanged.bind(this);
@@ -74,8 +78,7 @@ class NewLessonBase extends Component {
 
   componentDidMount() {
     if (this.props.edit) {
-      this.setState({ data: this.props.data.value, key: this.props.data.key });
-      console.log(this.props.data.value);
+      this.setState({ key: this.props.data.key });
     } else {
       const new_key = this.props.firebase.db
         .collection("sole_jr_comp_app_lessons")
@@ -222,10 +225,13 @@ const NewLessonView = ({
                 <Typography variant="subtitle2" gutterBottom>
                   Press the ADD Button to add a new Goal to this Lesson
                 </Typography>
-                <ReactEditableList
-                  list={data.goals}
-                  onListUpdated={handleGoalChanged}
-                />
+                {console.log("data", data.goals)}
+                {data.goals && (
+                  <ReactEditableList
+                    list={data.goals}
+                    onListUpdated={handleGoalChanged}
+                  />
+                )}
               </Grid>
             </Grid>
 

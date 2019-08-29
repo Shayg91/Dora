@@ -83,9 +83,7 @@ class NewScenario extends Component {
 
   componentDidMount() {
     if (!this.props.edit) {
-      const new_key = this.props.firebase.db
-        .collection("sole_jr_comp_app_lessons")
-        .doc();
+      const new_key = this.props.firebase.db.collection("Scenarios").doc();
       this.setState({ key: new_key.id });
     }
 
