@@ -120,14 +120,6 @@ class Scenario extends Component {
     this.setState({ anchorEl: event.currentTarget });
   };
 
-  /* How this function should work:
-  - Check if any lesson containes the scenario as a starting scenario. 
-    If connected - show message.
-  - Check if any scenario uses the scenario as next scenario.
-    If connected - show message.
-  - If nothing is connected - delete scenario.   
-  */
-
   handleClose = () => {
     this.setState({ anchorEl: null });
   };

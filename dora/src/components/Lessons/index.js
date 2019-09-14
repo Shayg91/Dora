@@ -81,7 +81,7 @@ class LessonsPage extends Component {
   handleLessonSelected = lesson => {
     if (
       this.state.selectedLesson &&
-      this.state.selectedLesson.key == lesson.key
+      this.state.selectedLesson.key === lesson.key
     ) {
       return;
     }
@@ -137,8 +137,6 @@ class LessonsPage extends Component {
   };
 
   handleAddLesson = (key, value) => {
-    console.log("Got Here");
-
     // Check if the id was already added to the list of lessons
     let isNew = true,
       location = -1,

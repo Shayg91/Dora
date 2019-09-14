@@ -28,7 +28,8 @@ export const INITIAL_STATE_FAILURE = {
     textOrWav: "",
     whatToPlay: ""
   },
-  nextScenarioID: ""
+  nextScenarioID: "",
+  numOfRetries: 2
 };
 
 export const INITIAL_STATE_SCENARIO = {

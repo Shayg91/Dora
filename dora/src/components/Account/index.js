@@ -1,6 +1,7 @@
 import React from "react";
 import { AuthUserContext, withAuthorization } from "../Session";
 
+// suppose to be the users personal page, for future use.
 const AccountPage = () => (
   <AuthUserContext.Consumer>
     {authUser => (

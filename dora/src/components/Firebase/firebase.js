@@ -3,6 +3,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
 
+// TODO: Need to add another file for authentications and add it to the git ignore.
 const firebaseConfig = {
   apiKey: "AIzaSyDbWbpZi-Va0JXEK0j3sqNSjtXAfccKDIs",
   authDomain: "solejr-comp-app.firebaseapp.com",
@@ -13,13 +14,14 @@ const firebaseConfig = {
   appId: "1:348793288479:web:36617b912814f782"
 };
 
+//this class handles the connections to the firebase
 class Firebase {
   constructor() {
     app.initializeApp(firebaseConfig);
 
-    this.auth = app.auth();
-    this.db = app.firestore();
-    this.storage = app.storage();
+    this.auth = app.auth(); //users
+    this.db = app.firestore(); //data
+    this.storage = app.storage(); //images
   }
 
   // *** Auth API ***
