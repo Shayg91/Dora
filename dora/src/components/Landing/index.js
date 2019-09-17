@@ -78,25 +78,57 @@ const Landing = () => {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map(card => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Review {card}
-                    </Typography>
-                    <Typography>
-                      We'll add things that people that have used the robot said
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+            <Grid item key="1" xs={12} sm={6} md={4}>
+              <Card className={classes.card}>
+                <CardMedia
+                  className={classes.cardMedia}
+                  image="https://source.unsplash.com/random"
+                  title="Image title"
+                />
+                <CardContent className={classes.cardContent}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    Review 1
+                  </Typography>
+                  <Typography>Easy to use Interface</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item key="2" xs={12} sm={6} md={4}>
+              <Card className={classes.card}>
+                <CardMedia
+                  className={classes.cardMedia}
+                  image="https://source.unsplash.com/random"
+                  title="Image title"
+                />
+                <CardContent className={classes.cardContent}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    Review 2
+                  </Typography>
+                  <Typography>
+                    Semi Natural Language when creating a new scenario is great!
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item key="3" xs={12} sm={6} md={4}>
+              <Card className={classes.card}>
+                <CardMedia
+                  className={classes.cardMedia}
+                  image="https://source.unsplash.com/random"
+                  title="Image title"
+                />
+                <CardContent className={classes.cardContent}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    Review 3
+                  </Typography>
+                  <Typography>
+                    Can easily create an interactive Lesson for children
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </Container>
       </main>
