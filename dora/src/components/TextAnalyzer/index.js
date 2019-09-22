@@ -35,36 +35,63 @@ const useStyles = makeStyles(theme => ({
 
 // This function does a naive convertion from the text that is entered in the textbox to a scenario
 const changeFromTextToScenario = (textValue, scenarioData, allScenarios) => {
-  let value = textValue.toLowerCase();
-  const valueArr = value.split("'");
+  /*
+  How arr is defined:
+  arr[0] - Starting text. Should contain the ROBOT_SEARCH_PRETEXT
+  arr[1] - Contains the question that the robot should ask the child
+  arr[3] - What the child should answer 
+  arr[5] - What the robot should say if the child answers a correct answer
+  arr[7] - The next scenario if the child asnwers a correct answer 
+  arr[9] - What the robot should say if the child answers an incorrect answer
+  arr[11] - The next scenario if the child answers an incorrect answer
+  */
   const arr = textValue.split("'");
 
-  if (arr.length > 1 && valueArr[0].indexOf(ROBOT_SEARCH_PRETEXT) === -1) {
-    return null;
+  // Checks that there is at least one ' and that the pretext is included in the text.
+  if (
+    arr.length > 1 &&
+    arr[0].toLowerCase().indexOf(ROBOT_SEARCH_PRETEXT) === -1
+  ) {
+    return "There was a problem converting the text. Please see help info for an example template";
   }
 
+  const answerText = arr[1];
+  const expectedAnswer = arr[3];
+  const successText = arr[5];
+  const successScenario = arr[7];
+  const failureText = arr[9];
+  const failureScenario = arr[11];
+
   let action = INITIAL_STATE_ACTION;
-  action.textOrWav = arr[1];
+  action.textOrWav = answerText;
 
   scenarioData.actions = [action];
-  scenarioData.waitFor.expectedAnswer.input = arr[3];
-  scenarioData.onSuccess.action.textOrWav = arr[5];
-  scenarioData.onfailure.action.textOrWav = arr[9];
+  scenarioData.waitFor.expectedAnswer.input = expectedAnswer;
+  scenarioData.onSuccess.action.textOrWav = successText;
+  scenarioData.onfailure.action.textOrWav = failureText;
 
+  // Checks if the scenario name entered is contained in the list of the scenarios
   const scenarioSuccess = allScenarios.filter(
-    data => data.value.name.toLowerCase() === valueArr[7]
+    data =>
+      data.value.name.toLowerCase().indexOf(successScenario.toLowerCase()) !==
+      -1
   );
 
+  // If a scenario was found - insert the scenario. Otherwise show the user an error
   if (scenarioSuccess.length > 0) {
     scenarioData.onSuccess.nextScenarioID = scenarioSuccess[0].value.name;
   } else {
     return "Success Scenario Name doesn't exist. Please make sure you typed the name in correctly.";
   }
 
+  // Checks if the scenario name entered is contained in the list of the scenarios
   const scenarioFailure = allScenarios.filter(
-    data => data.value.name.toLowerCase() === valueArr[11]
+    data =>
+      data.value.name.toLowerCase().indexOf(failureScenario.toLowerCase()) !==
+      -1
   );
 
+  // If a scenario was found - insert the scenario. Otherwise show the user an error
   if (scenarioFailure.length > 0) {
     scenarioData.onfailure.nextScenarioID = scenarioFailure[0].value.name;
   } else {
